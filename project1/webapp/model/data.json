@@ -1,0 +1,84 @@
+{
+    "Books": [
+        {
+            "ID": "ID1",
+            "Name": "Book 1",
+            "Author": "Author 1",
+            "Genre": "Tech",
+            "ReleaseDate": "2026-01-01",
+            "AvailableQuantity": 3
+        },
+        {
+            "ID": "ID2",
+            "Name": "Book 2",
+            "Author": "Author 2",
+            "Genre": "SciFi",
+            "ReleaseDate": "2026-01-02",
+            "AvailableQuantity": 5
+        },
+        {
+            "ID": "ID3",
+            "Name": "Book 3",
+            "Author": "Author 3",
+            "Genre": "Tech",
+            "ReleaseDate": "2026-01-03",
+            "AvailableQuantity": 2
+        },
+        {
+            "ID": "ID4",
+            "Name": "Book 4",
+            "Author": "Author 4",
+            "Genre": "Drama",
+            "ReleaseDate": "2026-01-04",
+            "AvailableQuantity": 7
+        },
+        {
+            "ID": "ID5",
+            "Name": "Book 5",
+            "Author": "Author 5",
+            "Genre": "SciFi",
+            "ReleaseDate": "2026-01-05",
+            "AvailableQuantity": 1
+        },
+        {
+            "ID": "ID6",
+            "Name": "Book 6",
+            "Author": "Author 6",
+            "Genre": "Drama",
+            "ReleaseDate": "2026-01-06",
+            "AvailableQuantity": 9
+        },
+        {
+            "ID": "ID7",
+            "Name": "Book 7",
+            "Author": "Author 7",
+            "Genre": "Horror",
+            "ReleaseDate": "2026-01-07",
+            "AvailableQuantity": 4
+        },
+        {
+            "ID": "ID8",
+            "Name": "Book 8",
+            "Author": "Author 8",
+            "Genre": "Tech",
+            "ReleaseDate": "2026-01-08",
+            "AvailableQuantity": 6
+        },
+        {
+            "ID": "ID9",
+            "Name": "Book 9",
+            "Author": "Author 9",
+            "Genre": "SciFi",
+            "ReleaseDate": "2026-01-09",
+            "AvailableQuantity": 8
+        },
+        {
+            "ID": "ID10",
+            "Name": "Book 10",
+            "Author": "Author 10",
+            "Genre": "Drama",
+            "ReleaseDate": "2026-01-10",
+            "AvailableQuantity": 10
+        }
+    ]
+}
