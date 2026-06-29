@@ -2,13 +2,25 @@
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m" xmlns:core="sap.ui.core">
     <Page id="page" title="{i18n>title}">
-        <Table id="booksTable"
-            core:require="{
-                String: 'sap/ui/model/type/String', 
-                Integer: 'sap/ui/model/type/Integer',
-                Date: 'sap/ui/model/type/Date'
-            }"
-            items="{view>/Books}">
+        <Table id="booksTable" mode="MultiSelect" items="{view>/Books}">
+            <headerToolbar>
+                <Toolbar>
+                    <ToolbarSpacer />
+                    <Button text="{i18n>buttonAddRecord}" press=".onAddRecord" type="Accept"></Button>
+                    <Button text="{i18n>buttonDeleteRecord}" press=".onDeleteRecord" type="Reject"></Button>
+                    <ToolbarSeparator />
+                    <Input width="50%" id="searchByTitleInput" placeholder="FDSfds"></Input>
+                    <Select id="genreFilterSelect" items="{filters>/genres}">
+                        <items>
+                            <core:Item
+                                text="{filters>text}"
+                                key="{filters>key}" />
+                        </items>
+                    </Select>
+                    <Button press=".onFilter" text="{i18n>buttonApplyFilters}"></Button>
+                    <ToolbarSpacer />
+                </Toolbar>
+            </headerToolbar>
             <columns>
                 <Column>
                     <Text text="{i18n>columnID}"></Text>
@@ -47,14 +59,15 @@
                         <Text
                             text="{
                                 path: 'view>ReleaseDate', 
-                                type: 'Date',
+                                type: 'sap.ui.model.type.Date',
                                 
                                 formatOptions: {
                                     source: {
                                         pattern: 'yyyy-MM-dd'
                                     }                                 
                                 }}"></Text>
-                        <Text text="{path: 'view>AvailableQuantity', type: 'Integer'}"></Text>
+                        <Text
+                            text="{path: 'view>AvailableQuantity', type: 'sap.ui.model.type.Integer'}"></Text>
                     </cells>
                 </ColumnListItem>
             </items>
