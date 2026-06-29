@@ -1,6 +1,63 @@
 <mvc:View controllerName="project1.controller.Main"
     xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m">
+    xmlns="sap.m" xmlns:core="sap.ui.core">
     <Page id="page" title="{i18n>title}">
+        <Table id="booksTable"
+            core:require="{
+                String: 'sap/ui/model/type/String', 
+                Integer: 'sap/ui/model/type/Integer',
+                Date: 'sap/ui/model/type/Date'
+            }"
+            items="{view>/Books}">
+            <columns>
+                <Column>
+                    <Text text="{i18n>columnID}"></Text>
+                </Column>
+                <Column>
+                    <Text text="{i18n>columnName}"></Text>
+                </Column>
+                <Column>
+                    <Text text="{i18n>columnAuthor}"></Text>
+                </Column>
+                <Column>
+                    <Text text="{i18n>columnGenre}"></Text>
+                </Column>
+                <Column>
+                    <Text text="{i18n>columnReleaseDate}"></Text>
+                </Column>
+                <Column>
+                    <Text text="{i18n>columnAvailableQuantity}"></Text>
+                </Column>
+            </columns>
+            <items>
+                <ColumnListItem>
+                    <cells>
+                        <Text text="{view>ID}"></Text>
+                        <Text text="{view>Name}"></Text>
+                        <Text text="{view>Author}"></Text>
+                        <Text text="{view>Genre}"></Text>
+                        <!-- 
+                        about binding with type and options
+                        https://ui5.sap.com/#/topic/07e4b920f5734fd78fdaa236f26236d8
+
+                        about Date and it's options
+                        https://ui5.sap.com/#/api/sap.ui.model.type.Date
+                        https://ui5.sap.com/#/api/sap.ui.core.format.DateFormat%23methods/sap.ui.core.format.DateFormat.getDateInstance
+                          -->
+                        <Text
+                            text="{
+                                path: 'view>ReleaseDate', 
+                                type: 'Date',
+                                
+                                formatOptions: {
+                                    source: {
+                                        pattern: 'yyyy-MM-dd'
+                                    }                                 
+                                }}"></Text>
+                        <Text text="{path: 'view>AvailableQuantity', type: 'Integer'}"></Text>
+                    </cells>
+                </ColumnListItem>
+            </items>
+        </Table>
     </Page>
 </mvc:View>
