@@ -9,7 +9,8 @@
                     <Button text="{i18n>buttonAddRecord}" press=".onAddRecord" type="Accept"></Button>
                     <Button text="{i18n>buttonDeleteRecord}" press=".onDeleteRecord" type="Reject"></Button>
                     <ToolbarSeparator />
-                    <Input width="50%" id="searchByTitleInput" placeholder="FDSfds"></Input>
+                    <Input width="50%" id="searchByTitleInput"
+                        placeholder="{i18n>inputSearchByTitle}"></Input>
                     <Select id="genreFilterSelect" items="{filters>/genres}">
                         <items>
                             <core:Item
@@ -40,12 +41,20 @@
                 <Column>
                     <Text text="{i18n>columnAvailableQuantity}"></Text>
                 </Column>
+                <Column>
+                    <Text text="{i18n>columnActions}"></Text>
+                </Column>
             </columns>
             <items>
                 <ColumnListItem>
                     <cells>
                         <Text text="{view>ID}"></Text>
-                        <Text text="{view>Name}"></Text>
+                        <VBox>
+                            <items>
+                                <Text text="{view>Name}" visible="{= !%{view>IsEditing}}"></Text>
+                                <Input visible="{view>IsEditing}" value="{view>Name}"></Input>
+                            </items>
+                        </VBox>
                         <Text text="{view>Author}"></Text>
                         <Text text="{view>Genre}"></Text>
                         <!-- 
@@ -68,6 +77,18 @@
                                 }}"></Text>
                         <Text
                             text="{path: 'view>AvailableQuantity', type: 'sap.ui.model.type.Integer'}"></Text>
+                        <VBox>
+                            <Button
+                                text="{i18n>buttonEditTitle}"
+                                icon="sap-icon://edit"
+                                press=".onEditPress" visible="{= !%{view>IsEditing}}"
+                                width="100%"></Button>
+                            <Button
+                                text="{i18n>buttonSaveChanges}"
+                                icon="sap-icon://save"
+                                press=".onSavePress" visible="{view>IsEditing}" type="Accept"
+                                width="100%"></Button>
+                        </VBox>
                     </cells>
                 </ColumnListItem>
             </items>
