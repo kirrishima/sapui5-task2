@@ -2,12 +2,14 @@
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m" xmlns:core="sap.ui.core">
     <Page id="page" title="{i18n>title}">
-        <Table id="booksTable" mode="MultiSelect" items="{view>/Books}">
+        <Table id="booksTable" mode="MultiSelect" items="{view>/Books}"
+            selectionChange=".onTableSelectionChange">
             <headerToolbar>
                 <Toolbar>
                     <ToolbarSpacer />
                     <Button text="{i18n>buttonAddRecord}" press=".onAddRecord" type="Accept"></Button>
-                    <Button text="{i18n>buttonDeleteRecord}" press=".onDeleteRecord" type="Reject"></Button>
+                    <Button text="{i18n>buttonDeleteRecord}" press=".onDeleteRecord" type="Reject"
+                        enabled="{view>/IsDeleteButtonEnabled}"></Button>
                     <ToolbarSeparator />
                     <Input width="50%" id="searchByTitleInput"
                         placeholder="{i18n>inputSearchByTitle}"></Input>
