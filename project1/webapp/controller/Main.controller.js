@@ -1,6 +1,15 @@
 sap.ui.define(
-  ["./BaseController", "sap/ui/model/json/JSONModel", "sap/ui/model/Filter", "sap/ui/model/FilterOperator"],
-  (BaseController, JSONModel, Filter, FilterOperator) => {
+  [
+    "./BaseController",
+    "sap/ui/model/json/JSONModel",
+    "sap/ui/model/Filter",
+    "sap/ui/model/FilterOperator",
+    "sap/m/Dialog",
+    "sap/m/Button",
+    "sap/m/Text",
+    "sap/m/library",
+  ],
+  (BaseController, JSONModel, Filter, FilterOperator, Dialog, Button, Text, mobileLibrary) => {
     "use strict";
 
     return BaseController.extend("project1.controller.Main", {
@@ -12,6 +21,9 @@ sap.ui.define(
           // Edit mode
           const newBooks = books.map((book) => ({ ...book, IsEditing: false }));
           viewModel.setProperty("/Books", newBooks);
+
+          // The Delete button will not be enabled unless at least one row is selected
+          viewModel.setProperty("/IsDeleteButtonEnabled", false);
 
           // Genres filter
           const genres = [...new Set(books.map((book) => book.Genre))].map((genre) => ({
@@ -39,23 +51,69 @@ sap.ui.define(
         const maxIdNum = Math.max(0, ...idNumbers);
         const newId = "ID" + (maxIdNum + 1);
 
-        books.push({ ID: newId });
+        // correct creating
+        books.push({
+          ID: newId,
+          IsEditing: false,
+          Name: "",
+          Author: "",
+          Genre: "",
+          ReleaseDate: new Date().toISOString().split("T")[0],
+          AvailableQuantity: 0,
+        });
 
         model.setProperty("/Books", books);
       },
 
       onDeleteRecord() {
-        const model = this.getModel("view");
-        const books = model?.getProperty("/Books");
-
         const table = this.byId("booksTable");
         const selectedItems = table?.getSelectedItems();
 
         const selectedIds = selectedItems.map((item) => item.getBindingContext("view").getObject().ID);
-        const filteredBooks = books.filter((book) => !selectedIds.includes(book.ID));
 
-        model?.setProperty("/Books", filteredBooks);
-        table?.removeSelections();
+        if (selectedIds.length > 0 && !this.confirmDeletionDialog) {
+          const resourceBundle = this.getView().getModel("i18n").getResourceBundle();
+          const titleText = resourceBundle.getText("dialogConfirmDeletionTitle", [selectedIds.join(", ")]);
+          const contentText = resourceBundle.getText("dialogConfirmDeletionContent");
+          const confirmButtonText = resourceBundle.getText("dialogConfirmDeletionConfirmButton");
+          const cancelButtonText = resourceBundle.getText("dialogConfirmDeletionCancelButton");
+
+          this.confirmDeletionDialog = new Dialog({
+            type: mobileLibrary.DialogType.Message,
+            title: titleText,
+            content: new Text({ text: contentText }),
+            beginButton: new Button({
+              type: mobileLibrary.ButtonType.Emphasized,
+              text: confirmButtonText,
+              press: () => {
+                const model = this.getModel("view");
+                const books = model?.getProperty("/Books");
+                const filteredBooks = books.filter((book) => !selectedIds.includes(book.ID));
+                model?.setProperty("/Books", filteredBooks);
+                table?.removeSelections();
+                this.getModel("view")?.setProperty("/IsDeleteButtonEnabled", false);
+
+                this.confirmDeletionDialog.close();
+                this.confirmDeletionDialog = null;
+              },
+            }),
+            endButton: new Button({
+              text: cancelButtonText,
+              press: () => {
+                this.confirmDeletionDialog.close();
+                this.confirmDeletionDialog = null;
+              },
+            }),
+          });
+
+          this.confirmDeletionDialog.open();
+        }
+      },
+
+      onTableSelectionChange(event) {
+        const selectedItemsCount = this.byId("booksTable")?.getSelectedItems()?.length ?? 0;
+
+        this.getModel("view")?.setProperty("/IsDeleteButtonEnabled", selectedItemsCount > 0);
       },
 
       onFilter(event) {
