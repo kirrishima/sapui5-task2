@@ -6,19 +6,23 @@ sap.ui.define(
     return BaseController.extend("project1.controller.Main", {
       onInit() {
         const viewModel = new JSONModel("model/data.json");
-        viewModel.attachRequestCompleted(
-          function () {
-            const books = viewModel.getProperty("/Books");
-            const genres = [...new Set(books.map((book) => book.Genre))].map((genre) => ({
-              key: genre,
-              text: genre,
-            }));
+        viewModel.attachRequestCompleted(() => {
+          const books = viewModel.getProperty("/Books");
 
-            genres.unshift({ key: "All", text: "All" });
-            const filtersModel = new JSONModel({ genres });
-            this.getView().setModel(filtersModel, "filters");
-          }.bind(this),
-        );
+          // Edit mode
+          const newBooks = books.map((book) => ({ ...book, IsEditing: false }));
+          viewModel.setProperty("/Books", newBooks);
+
+          // Genres filter
+          const genres = [...new Set(books.map((book) => book.Genre))].map((genre) => ({
+            key: genre,
+            text: genre,
+          }));
+
+          genres.unshift({ key: "All", text: "All" });
+          const filtersModel = new JSONModel({ genres });
+          this.getView().setModel(filtersModel, "filters");
+        }, this);
 
         this.getView()?.setModel(viewModel, "view");
       },
@@ -47,12 +51,8 @@ sap.ui.define(
         const table = this.byId("booksTable");
         const selectedItems = table?.getSelectedItems();
 
-        //1
         const selectedIds = selectedItems.map((item) => item.getBindingContext("view").getObject().ID);
         const filteredBooks = books.filter((book) => !selectedIds.includes(book.ID));
-
-        //2
-        // const filteredBooks = books.filter((book) => !selectedItems.some((item) => item.ID === book.ID));
 
         model?.setProperty("/Books", filteredBooks);
         table?.removeSelections();
@@ -87,6 +87,16 @@ sap.ui.define(
         }
 
         return filter;
+      },
+
+      onEditPress(event) {
+        const context = event.getSource().getBindingContext("view");
+        context.getModel().setProperty(context.getPath() + "/IsEditing", true);
+      },
+
+      onSavePress(event) {
+        const context = event.getSource().getBindingContext("view");
+        context.getModel().setProperty(context.getPath() + "/IsEditing", false);
       },
     });
   },
