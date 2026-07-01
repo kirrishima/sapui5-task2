@@ -111,9 +111,10 @@ sap.ui.define(
       },
 
       onTableSelectionChange(event) {
-        const selectedItemsCount = this.byId("booksTable")?.getSelectedItems()?.length ?? 0;
-
-        this.getModel("view")?.setProperty("/IsDeleteButtonEnabled", selectedItemsCount > 0);
+        this.getModel("view")?.setProperty(
+          "/IsDeleteButtonEnabled",
+          !!this.byId("booksTable")?.getSelectedItems()?.length,
+        );
       },
 
       onFilter(event) {
