@@ -1,0 +1,52 @@
+<core:FragmentDefinition
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core"
+    xmlns:l="sap.ui.layout">
+    <Dialog
+        id="dialog"
+        type="Message"
+        title="{i18n>dialogAddRecordTitle}">
+        <content>
+            <l:VerticalLayout width="100%">
+                <VBox class="sapUiSmallMarginBottom">
+                    <Label text="{i18n>dialogAddRecordLabelId}" labelFor="dialogTextId" />
+                    <Input id="dialogInputId" required="true" value="{view>/NewRecord/ID}" />
+                </VBox>
+                <VBox class="sapUiSmallMarginBottom">
+                    <Label text="{i18n>dialogAddRecordLabelName}" labelFor="dialogTextId1" />
+                    <Input id="dialogInputName" required="true" value="{view>/NewRecord/Name}" />
+                </VBox>
+                <VBox class="sapUiSmallMarginBottom">
+                    <Label text="{i18n>dialogAddRecordLabelAuthor}" labelFor="dialogTextId1" />
+                    <Input id="dialogInputAuthor" required="true" value="{view>/NewRecord/Author}" />
+                </VBox>
+                <VBox class="sapUiSmallMarginBottom">
+                    <Label text="{i18n>dialogAddRecordLabelGenre}" labelFor="dialogTextId1" />
+                    <Input id="dialogInputGenre" required="true" value="{view>/NewRecord/Genre}" />
+                </VBox>
+                <VBox class="sapUiSmallMarginBottom">
+                    <Label text="{i18n>dialogAddRecordLabelReleaseDate}" labelFor="dialogTextId1" />
+                    <Input id="dialogInputReleaseDate" required="true"
+                        value="{view>/NewRecord/ReleaseDate}" />
+                </VBox>
+                <VBox class="sapUiSmallMarginBottom">
+                    <Label text="{i18n>dialogAddRecordLabelAvailableQuantity}"
+                        labelFor="dialogTextId1" />
+                    <Input id="dialogInputAvailableQuantity" required="true"
+                        value="{path: 'view>/NewRecord/AvailableQuantity', type: 'sap.ui.model.type.Integer', constraints: {minimum: 0}}" />
+                </VBox>
+            </l:VerticalLayout>
+        </content>
+        <beginButton>
+            <Button
+                type="Emphasized"
+                text="{i18n>dialogAddRecordConfirmButton}"
+                press=".onConfirmRecordCreation" />
+        </beginButton>
+        <endButton>
+            <Button
+                text="{i18n>dialogAddRecordCancelButton}"
+                press=".onCancelRecordCreation" />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

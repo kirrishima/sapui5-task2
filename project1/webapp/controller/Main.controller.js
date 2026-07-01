@@ -4,28 +4,23 @@ sap.ui.define(
     "sap/ui/model/json/JSONModel",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
-    "sap/m/Dialog",
-    "sap/m/Button",
-    "sap/m/Text",
-    "sap/m/library",
+    "sap/m/MessageToast",
   ],
-  (BaseController, JSONModel, Filter, FilterOperator, Dialog, Button, Text, mobileLibrary) => {
+  (BaseController, JSONModel, Filter, FilterOperator, MessageToast) => {
     "use strict";
 
     return BaseController.extend("project1.controller.Main", {
       onInit() {
+        this.dateRegex = /^\d{4}-\d{2}-\d{2}$/;
         const viewModel = new JSONModel("model/data.json");
+
         viewModel.attachRequestCompleted(() => {
           const books = viewModel.getProperty("/Books");
-
-          // Edit mode
           const newBooks = books.map((book) => ({ ...book, IsEditing: false }));
-          viewModel.setProperty("/Books", newBooks);
 
-          // The Delete button will not be enabled unless at least one row is selected
-          viewModel.setProperty("/IsDeleteButtonEnabled", false);
+          viewModel.setData({ Books: newBooks, IsDeleteButtonEnabled: false });
+          this._viewModel = viewModel;
 
-          // Genres filter
           const genres = [...new Set(books.map((book) => book.Genre))].map((genre) => ({
             key: genre,
             text: genre,
@@ -39,11 +34,8 @@ sap.ui.define(
         this.getView()?.setModel(viewModel, "view");
       },
 
-      onAddRecord() {
-        const model = this.getModel("view");
-        const books = model?.getProperty("/Books");
-
-        const idNumbers = books.map((book) => {
+      async onAddRecord() {
+        const idNumbers = this._viewModel.getProperty("/Books").map((book) => {
           const num = parseInt(book.ID?.replace("ID", "") ?? "0", 10);
           return isNaN(num) ? 0 : num;
         });
@@ -51,8 +43,7 @@ sap.ui.define(
         const maxIdNum = Math.max(0, ...idNumbers);
         const newId = "ID" + (maxIdNum + 1);
 
-        // correct creating
-        books.push({
+        this._viewModel.setProperty("/NewRecord", {
           ID: newId,
           IsEditing: false,
           Name: "",
@@ -62,52 +53,68 @@ sap.ui.define(
           AvailableQuantity: 0,
         });
 
-        model.setProperty("/Books", books);
+        if (!this._addRecordDialog) {
+          this._addRecordDialog = await this.loadFragment({
+            name: "project1.view.AddRecordDialog",
+          });
+        }
+
+        this._addRecordDialog.open();
       },
 
-      onDeleteRecord() {
-        const table = this.byId("booksTable");
-        const selectedItems = table?.getSelectedItems();
+      onCancelRecordCreation() {
+        this._addRecordDialog.close();
+      },
 
+      _validateNewRecordModel() {
+        const data = this._viewModel.getProperty("/NewRecord");
+        const quantity =
+          data.AvailableQuantity !== "" && data.AvailableQuantity !== null ? Number(data.AvailableQuantity) : NaN;
+
+        return Boolean(
+          data.ID &&
+          data.Name &&
+          data.Author &&
+          data.Genre &&
+          data.ReleaseDate &&
+          this.dateRegex.test(data.ReleaseDate) &&
+          // Проверяем, что это целое число, оно конечно (не Infinity) и >= 0
+          Number.isInteger(quantity) &&
+          quantity >= 0,
+        );
+      },
+
+      onConfirmRecordCreation() {
+        if (!this._validateNewRecordModel()) {
+          const resourceBundle = this.getModel("i18n").getResourceBundle();
+          MessageToast.show(resourceBundle.getText("dialogAddRecordInvalidFieldsMsg"));
+          return;
+        }
+
+        const books = this._viewModel.getProperty("/Books");
+        const newRecord = this._viewModel.getProperty("/NewRecord");
+
+        this._viewModel.setProperty("/Books", [...books, newRecord]);
+        this._addRecordDialog.close();
+      },
+
+      async onDeleteRecord() {
+        const selectedItems = this.byId("booksTable").getSelectedItems();
         const selectedIds = selectedItems.map((item) => item.getBindingContext("view").getObject().ID);
 
-        if (selectedIds.length > 0 && !this.confirmDeletionDialog) {
-          const resourceBundle = this.getView().getModel("i18n").getResourceBundle();
-          const titleText = resourceBundle.getText("dialogConfirmDeletionTitle", [selectedIds.join(", ")]);
-          const contentText = resourceBundle.getText("dialogConfirmDeletionContent");
-          const confirmButtonText = resourceBundle.getText("dialogConfirmDeletionConfirmButton");
-          const cancelButtonText = resourceBundle.getText("dialogConfirmDeletionCancelButton");
-
-          this.confirmDeletionDialog = new Dialog({
-            type: mobileLibrary.DialogType.Message,
-            title: titleText,
-            content: new Text({ text: contentText }),
-            beginButton: new Button({
-              type: mobileLibrary.ButtonType.Emphasized,
-              text: confirmButtonText,
-              press: () => {
-                const model = this.getModel("view");
-                const books = model?.getProperty("/Books");
-                const filteredBooks = books.filter((book) => !selectedIds.includes(book.ID));
-                model?.setProperty("/Books", filteredBooks);
-                table?.removeSelections();
-                this.getModel("view")?.setProperty("/IsDeleteButtonEnabled", false);
-
-                this.confirmDeletionDialog.close();
-                this.confirmDeletionDialog = null;
-              },
-            }),
-            endButton: new Button({
-              text: cancelButtonText,
-              press: () => {
-                this.confirmDeletionDialog.close();
-                this.confirmDeletionDialog = null;
-              },
-            }),
-          });
-
-          this.confirmDeletionDialog.open();
+        if (!selectedIds.length) {
+          return;
         }
+
+        this._viewModel.setProperty("/SelectedIds", selectedIds);
+
+        if (!this._confirmDeletionDialog) {
+          this._confirmDeletionDialog = await this.loadFragment({
+            name: "module:project1/fragment/ConfirmDeletionDialog",
+          });
+        }
+
+        this._confirmDeletionDialog.open();
       },
 
       onTableSelectionChange(event) {
@@ -115,6 +122,26 @@ sap.ui.define(
           "/IsDeleteButtonEnabled",
           !!this.byId("booksTable")?.getSelectedItems()?.length,
         );
+      },
+
+      onConfirmDeletion() {
+        const selectedIds = this._viewModel.getProperty("/SelectedIds");
+        const books = this._viewModel.getProperty("/Books");
+
+        this._viewModel.setProperty(
+          "/Books",
+          books.filter((book) => !selectedIds.includes(book.ID)),
+        );
+
+        this.byId("booksTable").removeSelections();
+        this._viewModel.setProperty("/IsDeleteButtonEnabled", false);
+        this._viewModel.setProperty("/SelectedIds", []);
+
+        this._confirmDeletionDialog.close();
+      },
+
+      onCancelDeletion() {
+        this._confirmDeletionDialog.close();
       },
 
       onFilter(event) {
