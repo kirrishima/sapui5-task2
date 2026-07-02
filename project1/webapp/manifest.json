@@ -38,16 +38,6 @@
           "localUri": "localService/metadataV4.xml"
         }
       }
-    },
-    "models": {
-      "v2Model": {
-        "dataSource": "ODataV2Source",
-        "preload": true
-      },
-      "v4Model": {
-        "dataSource": "ODataV4Source",
-        "preload": true
-      }
     }
   },
   "sap.ui": {
@@ -85,6 +75,14 @@
         "settings": {
           "bundleName": "project1.i18n.i18n"
         }
+      },
+      "v2Model": {
+        "dataSource": "ODataV2Source",
+        "preload": true
+      },
+      "v4Model": {
+        "dataSource": "ODataV4Source",
+        "preload": true
       }
     },
     "resources": {

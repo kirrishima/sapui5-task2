@@ -2,11 +2,12 @@ sap.ui.define(
   [
     "./BaseController",
     "sap/ui/model/json/JSONModel",
+    "sap/ui/model/odata/v2/ODataModel",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/core/library",
   ],
-  (BaseController, JSONModel, Filter, FilterOperator, coreLibrary) => {
+  (BaseController, JSONModel,ODataModelv2, Filter, FilterOperator, coreLibrary) => {
     "use strict";
 
     const ValueState = coreLibrary.ValueState;
@@ -33,6 +34,7 @@ sap.ui.define(
           this.getView().setModel(filtersModel, "filters");
         }, this);
 
+        
         this.getView()?.setModel(viewModel, "view");
       },
 
