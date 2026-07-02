@@ -3,93 +3,192 @@
     xmlns="sap.m" xmlns:core="sap.ui.core"
     core:require="{formatter: 'project1/model/formatter'}">
     <Page id="page" title="{i18n>title}">
-        <Table id="booksTable" mode="MultiSelect" items="{view>/Books}"
-            selectionChange=".onTableSelectionChange">
-            <headerToolbar>
-                <Toolbar>
-                    <ToolbarSpacer />
-                    <Button text="{i18n>buttonAddRecord}" press=".onAddRecord" type="Accept"></Button>
-                    <Button text="{i18n>buttonDeleteRecord}" press=".onDeleteRecord" type="Reject"
-                        enabled="{view>/IsDeleteButtonEnabled}"></Button>
-                    <ToolbarSeparator />
-                    <Input width="50%" id="searchByTitleInput"
-                        placeholder="{i18n>inputSearchByTitle}"></Input>
-                    <Select id="genreFilterSelect" items="{filters>/genres}">
-                        <items>
-                            <core:Item
-                                text="{filters>text}"
-                                key="{filters>key}" />
-                        </items>
-                    </Select>
-                    <Button press=".onFilter" text="{i18n>buttonApplyFilters}"></Button>
-                    <ToolbarSpacer />
-                </Toolbar>
-            </headerToolbar>
-            <columns>
-                <Column>
-                    <Text text="{i18n>columnID}"></Text>
-                </Column>
-                <Column>
-                    <Text text="{i18n>columnName}"></Text>
-                </Column>
-                <Column>
-                    <Text text="{i18n>columnAuthor}"></Text>
-                </Column>
-                <Column>
-                    <Text text="{i18n>columnGenre}"></Text>
-                </Column>
-                <Column>
-                    <Text text="{i18n>columnReleaseDate}"></Text>
-                </Column>
-                <Column>
-                    <Text text="{i18n>columnAvailableQuantity}"></Text>
-                </Column>
-                <Column>
-                    <Text text="{i18n>columnActions}"></Text>
-                </Column>
-            </columns>
+        <IconTabBar id="iconTabBar" expanded="{device>/isNoPhone}">
             <items>
-                <ColumnListItem>
-                    <cells>
-                        <Text text="{view>ID}"></Text>
-                        <VBox>
+                <IconTabFilter text="{i18n>iconTabFilterJsonModelText}" key="jsonmodel">
+                    <content>
+                        <Table id="booksTable" mode="MultiSelect" items="{view>/Books}"
+                            selectionChange=".onTableSelectionChange">
+                            <headerToolbar>
+                                <Toolbar>
+                                    <ToolbarSpacer />
+                                    <Button text="{i18n>buttonAddRecord}" press=".onAddRecord"
+                                        type="Accept"></Button>
+                                    <Button text="{i18n>buttonDeleteRecord}" press=".onDeleteRecord"
+                                        type="Reject"
+                                        enabled="{view>/IsDeleteButtonEnabled}"></Button>
+                                    <ToolbarSeparator />
+                                    <Input width="50%" id="searchByTitleInput"
+                                        placeholder="{i18n>inputSearchByTitle}"></Input>
+                                    <Select id="genreFilterSelect" items="{filters>/genres}">
+                                        <items>
+                                            <core:Item
+                                                text="{filters>text}"
+                                                key="{filters>key}" />
+                                        </items>
+                                    </Select>
+                                    <Button press=".onFilter" text="{i18n>buttonApplyFilters}"></Button>
+                                    <ToolbarSpacer />
+                                </Toolbar>
+                            </headerToolbar>
+                            <columns>
+                                <Column>
+                                    <Text text="{i18n>columnID}"></Text>
+                                </Column>
+                                <Column>
+                                    <Text text="{i18n>columnName}"></Text>
+                                </Column>
+                                <Column>
+                                    <Text text="{i18n>columnAuthor}"></Text>
+                                </Column>
+                                <Column>
+                                    <Text text="{i18n>columnGenre}"></Text>
+                                </Column>
+                                <Column>
+                                    <Text text="{i18n>columnReleaseDate}"></Text>
+                                </Column>
+                                <Column>
+                                    <Text text="{i18n>columnAvailableQuantity}"></Text>
+                                </Column>
+                                <Column>
+                                    <Text text="{i18n>columnActions}"></Text>
+                                </Column>
+                            </columns>
                             <items>
-                                <Text text="{view>Name}" visible="{= !%{view>IsEditing}}"></Text>
-                                <Input visible="{view>IsEditing}" value="{view>Name}"></Input>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{view>ID}"></Text>
+                                        <VBox>
+                                            <items>
+                                                <Text text="{view>Name}"
+                                                    visible="{= !%{view>IsEditing}}"></Text>
+                                                <Input visible="{view>IsEditing}"
+                                                    value="{view>Name}"></Input>
+                                            </items>
+                                        </VBox>
+                                        <Text text="{view>Author}"></Text>
+                                        <Text text="{view>Genre}"></Text>
+                                        <Text
+                                            text="{
+                                            path: 'view>ReleaseDate', 
+                                            formatter: 'formatter.publishedYear.bind($controller)'
+                                        }" />
+                                        <Text
+                                            text="{path: 'view>AvailableQuantity', type: 'sap.ui.model.type.Integer'}"></Text>
+                                        <VBox>
+                                            <Button
+                                                text="{i18n>buttonEditTitle}"
+                                                icon="sap-icon://edit"
+                                                press=".onEditPress"
+                                                visible="{= !%{view>IsEditing}}"
+                                                width="100%"></Button>
+                                            <Button
+                                                text="{i18n>buttonSaveChanges}"
+                                                icon="sap-icon://save"
+                                                press=".onSavePress" visible="{view>IsEditing}"
+                                                type="Accept"
+                                                width="100%"></Button>
+                                        </VBox>
+                                    </cells>
+                                </ColumnListItem>
                             </items>
-                        </VBox>
-                        <Text text="{view>Author}"></Text>
-                        <Text text="{view>Genre}"></Text>
-                        <!-- 
-                        about binding with type and options
-                        https://ui5.sap.com/#/topic/07e4b920f5734fd78fdaa236f26236d8
+                        </Table>
+                    </content>
+                </IconTabFilter>
+                <IconTabFilter text="{i18n>iconTabFilterOData2Text}" key="odatav2">
+                    <content>
+                        <Table items="{v2Model>/Products}">
+                            <columns>
+                                <Column>
+                                    <Text text="{i18n>columnOdataV2Id}"></Text>
+                                </Column>
+                                <Column>
+                                    <Text text="{i18n>columnOdataV2Name}"></Text>
+                                </Column>
+                                <Column>
+                                    <Text text="{i18n>columnOdataV2Description}"></Text>
+                                </Column>
+                                <Column>
+                                    <Text text="{i18n>columnOdataV2ReleaseDate}"></Text>
+                                </Column>
+                                <Column>
+                                    <Text text="{i18n>columnOdataV2DiscontinuedDate}"></Text>
+                                </Column>
+                                <Column>
+                                    <Text text="{i18n>columnOdataV2Rating}"></Text>
+                                </Column>
+                                <Column>
+                                    <Text text="{i18n>columnOdataV2Price}"></Text>
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{v2Model>ID}"></Text>
+                                        <Text text="{v2Model>Name}"></Text>
+                                        <Text text="{v2Model>Description}"></Text>
+                                        <Text text="{v2Model>ReleaseDate}"></Text>
+                                        <Text text="{v2Model>DiscontinuedDate}"></Text>
+                                        <Text text="{v2Model>Rating}"></Text>
+                                        <Text text="{v2Model>Price}"></Text>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </content>
+                </IconTabFilter>
+                <IconTabFilter text="{i18n>iconTabFilterOData4Text}" key="odatav4">
+                    <content>
+                        <Table items="{v4Model>/Products}">
+                            <columns>
+                                <Column>
+                                    <Text text="{i18n>columnOdataV2Id}"></Text>
+                                </Column>
+                                <Column>
+                                    <Text text="{i18n>columnOdataV2Name}"></Text>
+                                </Column>
+                                <Column>
+                                    <Text text="{i18n>columnOdataV2Description}"></Text>
+                                </Column>
+                                <Column>
+                                    <Text text="{i18n>columnOdataV2ReleaseDate}"></Text>
+                                </Column>
+                                <Column>
+                                    <Text text="{i18n>columnOdataV2DiscontinuedDate}"></Text>
+                                </Column>
+                                <Column>
+                                    <Text text="{i18n>columnOdataV2Rating}"></Text>
+                                </Column>
+                                <Column>
+                                    <Text text="{i18n>columnOdataV2Price}"></Text>
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{v4Model>ID}"></Text>
+                                        <Text text="{v4Model>Name}"></Text>
+                                        <Text text="{v4Model>Description}"></Text>
+                                        <Text
+                                            text="{
+                                                path: 'v4Model>ReleaseDate',
+                                                targetType: 'any'
+                                            }" />
 
-                        about Date and it's options
-                        https://ui5.sap.com/#/api/sap.ui.model.type.Date
-                        https://ui5.sap.com/#/api/sap.ui.core.format.DateFormat%23methods/sap.ui.core.format.DateFormat.getDateInstance
-                          -->
-                        <Text
-                            text="{
-                                path: 'view>ReleaseDate', 
-                                formatter: 'formatter.publishedYear.bind($controller)'
-                            }" />
-                        <Text
-                            text="{path: 'view>AvailableQuantity', type: 'sap.ui.model.type.Integer'}"></Text>
-                        <VBox>
-                            <Button
-                                text="{i18n>buttonEditTitle}"
-                                icon="sap-icon://edit"
-                                press=".onEditPress" visible="{= !%{view>IsEditing}}"
-                                width="100%"></Button>
-                            <Button
-                                text="{i18n>buttonSaveChanges}"
-                                icon="sap-icon://save"
-                                press=".onSavePress" visible="{view>IsEditing}" type="Accept"
-                                width="100%"></Button>
-                        </VBox>
-                    </cells>
-                </ColumnListItem>
+                                        <Text
+                                            text="{
+                                                path: 'v4Model>DiscontinuedDate',
+                                                targetType: 'any'
+                                            }" />
+                                        <Text text="{v4Model>Rating}"></Text>
+                                        <Text text="{v4Model>Price}"></Text>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </content>
+                </IconTabFilter>
             </items>
-        </Table>
+        </IconTabBar>
     </Page>
 </mvc:View>
