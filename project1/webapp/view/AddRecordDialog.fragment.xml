@@ -10,30 +10,37 @@
             <l:VerticalLayout width="100%">
                 <VBox class="sapUiSmallMarginBottom">
                     <Label text="{i18n>dialogAddRecordLabelId}" labelFor="dialogTextId" />
-                    <Input id="dialogInputId" required="true" value="{view>/NewRecord/ID}" />
+                    <Input id="dialogInputId" required="true" value="{view>/NewRecord/ID}"
+                        valueStateText="{i18n>dialogAddRecordErrorRequired}" />
                 </VBox>
                 <VBox class="sapUiSmallMarginBottom">
                     <Label text="{i18n>dialogAddRecordLabelName}" labelFor="dialogTextId1" />
-                    <Input id="dialogInputName" required="true" value="{view>/NewRecord/Name}" />
+                    <Input id="dialogInputName" required="true" value="{view>/NewRecord/Name}"
+                        valueStateText="{i18n>dialogAddRecordErrorRequired}" />
                 </VBox>
                 <VBox class="sapUiSmallMarginBottom">
                     <Label text="{i18n>dialogAddRecordLabelAuthor}" labelFor="dialogTextId1" />
-                    <Input id="dialogInputAuthor" required="true" value="{view>/NewRecord/Author}" />
+                    <Input id="dialogInputAuthor" required="true" value="{view>/NewRecord/Author}"
+                        valueStateText="{i18n>dialogAddRecordErrorRequired}" />
                 </VBox>
                 <VBox class="sapUiSmallMarginBottom">
                     <Label text="{i18n>dialogAddRecordLabelGenre}" labelFor="dialogTextId1" />
-                    <Input id="dialogInputGenre" required="true" value="{view>/NewRecord/Genre}" />
+                    <Input id="dialogInputGenre" required="true" value="{view>/NewRecord/Genre}"
+                        valueStateText="{i18n>dialogAddRecordErrorRequired}" />
                 </VBox>
                 <VBox class="sapUiSmallMarginBottom">
-                    <Label text="{i18n>dialogAddRecordLabelReleaseDate}" labelFor="dialogTextId1" />
-                    <Input id="dialogInputReleaseDate" required="true"
-                        value="{view>/NewRecord/ReleaseDate}" />
+                    <Label text="{i18n>dialogAddRecordLabelReleaseDate}" labelFor="dialogTextId1"
+                    />
+                    <DatePicker id="dialogDatePicker" value="{view>/NewRecord/ReleaseDate}"
+                        valueFormat="yyyy-MM-dd" displayFormat="yyyy-MM-dd"
+                        valueStateText="{i18n>dialogAddRecordErrorInvalidDate}" />
                 </VBox>
                 <VBox class="sapUiSmallMarginBottom">
                     <Label text="{i18n>dialogAddRecordLabelAvailableQuantity}"
                         labelFor="dialogTextId1" />
                     <Input id="dialogInputAvailableQuantity" required="true"
-                        value="{path: 'view>/NewRecord/AvailableQuantity', type: 'sap.ui.model.type.Integer', constraints: {minimum: 0}}" />
+                        value="{view>/NewRecord/AvailableQuantity}"
+                        valueStateText="{i18n>dialogAddRecordErrorInvalidQuantity}" />
                 </VBox>
             </l:VerticalLayout>
         </content>

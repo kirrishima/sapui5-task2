@@ -20,6 +20,34 @@
       "id": "@sap/generator-fiori:basic",
       "version": "1.27.0",
       "toolsId": "a5132ce0-649f-4432-b5b3-f87e68bdb4bf"
+    },
+    "dataSources": {
+      "ODataV2Source": {
+        "uri": "/V2/OData/OData.svc/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "2.0",
+          "localUri": "localService/metadataV2.xml"
+        }
+      },
+      "ODataV4Source": {
+        "uri": "/V4/OData/OData.svc/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0",
+          "localUri": "localService/metadataV4.xml"
+        }
+      }
+    },
+    "models": {
+      "v2Model": {
+        "dataSource": "ODataV2Source",
+        "preload": true
+      },
+      "v4Model": {
+        "dataSource": "ODataV4Source",
+        "preload": true
+      }
     }
   },
   "sap.ui": {
