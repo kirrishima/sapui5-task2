@@ -4,7 +4,7 @@ sap.ui.define([], function () {
   return {
     publishedYear(date) {
       const resourceBundle = this?.getOwnerComponent()?.getModel("i18n")?.getResourceBundle();
-      return resourceBundle.getText("publishedYear", date.split("-")[0]);
+      return resourceBundle.getText("publishedYear", [date.split("-")[0]]);
     },
   };
 });
