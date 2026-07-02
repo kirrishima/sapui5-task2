@@ -4,10 +4,12 @@ sap.ui.define(
     "sap/ui/model/json/JSONModel",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
-    "sap/m/MessageToast",
+    "sap/ui/core/library",
   ],
-  (BaseController, JSONModel, Filter, FilterOperator, MessageToast) => {
+  (BaseController, JSONModel, Filter, FilterOperator, coreLibrary) => {
     "use strict";
+
+    const ValueState = coreLibrary.ValueState;
 
     return BaseController.extend("project1.controller.Main", {
       onInit() {
@@ -59,6 +61,7 @@ sap.ui.define(
           });
         }
 
+        this._clearNewRecordValidation();
         this._addRecordDialog.open();
       },
 
@@ -66,28 +69,58 @@ sap.ui.define(
         this._addRecordDialog.close();
       },
 
+      _getNewRecordInputFields() {
+        return {
+          ID: this.byId("dialogInputId"),
+          Name: this.byId("dialogInputName"),
+          Author: this.byId("dialogInputAuthor"),
+          Genre: this.byId("dialogInputGenre"),
+          ReleaseDate: this.byId("dialogDatePicker"),
+          AvailableQuantity: this.byId("dialogInputAvailableQuantity"),
+        };
+      },
+
+      _clearNewRecordValidation() {
+        const fields = this._getNewRecordInputFields();
+        for (const field of Object.values(fields)) {
+          field.setValueState(ValueState.None);
+        }
+      },
+
       _validateNewRecordModel() {
+        this._clearNewRecordValidation();
         const data = this._viewModel.getProperty("/NewRecord");
+        let valid = true;
+        const fields = this._getNewRecordInputFields();
+
+        ["ID", "Name", "Author", "Genre"].forEach((key) => {
+          if (!data[key]) {
+            fields[key].setValueState(ValueState.Error);
+            valid = false;
+          }
+        });
+
+        if (!data.ReleaseDate || !this.dateRegex.test(data.ReleaseDate)) {
+          fields.ReleaseDate.setValueState(ValueState.Error);
+          valid = false;
+        }
+
         const quantity =
           data.AvailableQuantity !== "" && data.AvailableQuantity !== null ? Number(data.AvailableQuantity) : NaN;
 
-        return Boolean(
-          data.ID &&
-          data.Name &&
-          data.Author &&
-          data.Genre &&
-          data.ReleaseDate &&
-          this.dateRegex.test(data.ReleaseDate) &&
-          // Проверяем, что это целое число, оно конечно (не Infinity) и >= 0
-          Number.isInteger(quantity) &&
-          quantity >= 0,
-        );
+        if (!Number.isInteger(quantity) || quantity < 0) {
+          fields.AvailableQuantity.setValueState(ValueState.Error);
+          fields.AvailableQuantity.setValueStateText(
+            this.getModel("i18n").getSourceBundle().getText("dialogAddRecordErrorInvalidQuantity"),
+          );
+          valid = false;
+        }
+
+        return valid;
       },
 
       onConfirmRecordCreation() {
         if (!this._validateNewRecordModel()) {
-          const resourceBundle = this.getModel("i18n").getResourceBundle();
-          MessageToast.show(resourceBundle.getText("dialogAddRecordInvalidFieldsMsg"));
           return;
         }
 
