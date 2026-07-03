@@ -21,13 +21,13 @@ server:
         mountPath: /
         services:
           - urlPath: /V2/OData/OData.svc
-            metadataPath: ./webapp/localService/metadataV2.xml
-            mockdataPath: ./webapp/localService/dataV2
-            generateMockData: true
+            metadataPath: ./webapp/localService/ODataV2Service/metadataV2.xml
+            mockdataPath: ./webapp/localService/ODataV2Service/data
+            generateMockData: false
           - urlPath: /V4/OData/OData.svc
-            metadataPath: ./webapp/localService/metadataV4.xml
-            mockdataPath: ./webapp/localService/dataV4
-            generateMockData: true
+            metadataPath: ./webapp/localService/ODataV4Service/metadataV4.xml
+            mockdataPath: ./webapp/localService/ODataV4Service/data
+            generateMockData: false
     - name: fiori-tools-appreload
       afterMiddleware: compression
       configuration:

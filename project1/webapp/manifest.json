@@ -27,7 +27,7 @@
         "type": "OData",
         "settings": {
           "odataVersion": "2.0",
-          "localUri": "localService/metadataV2.xml"
+          "localUri": "localService/ODataV2Service/metadataV2.xml"
         }
       },
       "ODataV4Source": {
@@ -35,7 +35,7 @@
         "type": "OData",
         "settings": {
           "odataVersion": "4.0",
-          "localUri": "localService/metadataV4.xml"
+          "localUri": "localService/ODataV4Service/metadataV4.xml"
         }
       }
     }
