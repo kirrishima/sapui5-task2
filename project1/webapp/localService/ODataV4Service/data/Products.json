@@ -1,0 +1,227 @@
+[
+  {
+    "ID": 1,
+    "Name": "Clean SAPUI5: A Style Guide for Developers",
+    "Description": "Исчерпывающее руководство по написанию читаемого, поддерживаемого и эффективного кода для SAPUI5. Охватывает лучшие практики, ES6+, TypeScript и модульность.",
+    "ReleaseDate": "2022-06-15T10:30:00+03:00",
+    "DiscontinuedDate": null,
+    "Rating": 5,
+    "Price": 74.99
+  },
+  {
+    "ID": 2,
+    "Name": "SAPUI5 – The Comprehensive Guide",
+    "Description": "Полное руководство по разработке с SAPUI5 от основ до продвинутых тем: TypeScript, модули, привязка данных, OData, Fiori elements и машинное обучение.",
+    "ReleaseDate": "2025-05-22T09:00:00+02:00",
+    "DiscontinuedDate": null,
+    "Rating": 5,
+    "Price": 84.99
+  },
+  {
+    "ID": 3,
+    "Name": "JavaScript: The Definitive Guide",
+    "Description": "Исчерпывающий справочник по JavaScript, известный как 'Библия JavaScript'. Охватывает все аспекты языка от основ до тонкостей.",
+    "ReleaseDate": "2020-07-15T14:45:00-04:00",
+    "DiscontinuedDate": null,
+    "Rating": 5,
+    "Price": 64.99
+  },
+  {
+    "ID": 4,
+    "Name": "You Don't Know JS Yet",
+    "Description": "Культовая серия книг, глубоко погружающая в механизмы работы JavaScript и развенчивающая распространенные заблуждения. Необходима для мастерского владения языком.",
+    "ReleaseDate": "2020-05-01T08:15:00+01:00",
+    "DiscontinuedDate": "2024-11-30T23:59:59+01:00",
+    "Rating": 5,
+    "Price": 49.99
+  },
+  {
+    "ID": 5,
+    "Name": "Eloquent JavaScript",
+    "Description": "Классическое введение в JavaScript, доступное бесплатно онлайн. Отличается ясными объяснениями и увлекательными примерами для новичков и опытных разработчиков.",
+    "ReleaseDate": "2018-12-01T12:00:00+00:00",
+    "DiscontinuedDate": null,
+    "Rating": 4,
+    "Price": 39.99
+  },
+  {
+    "ID": 6,
+    "Name": "Clean SAPUI5: Lesbarer und Wartbarer SAPUI5-Code",
+    "Description": "Немецкоязычное издание 'Clean SAPUI5'. Помогает разработчикам использовать концепции чистого кода в проектах SAPUI5 и JavaScript для повышения качества и скорости разработки.",
+    "ReleaseDate": "2024-01-15T16:20:00+01:00",
+    "DiscontinuedDate": null,
+    "Rating": 4,
+    "Price": 74.99
+  },
+  {
+    "ID": 7,
+    "Name": "JavaScript с нуля до профи",
+    "Description": "Практическое руководство, сочетающее теорию с упражнениями и проектами. Демонстрирует применение JavaScript для создания веб-приложений от сайтов до игр.",
+    "ReleaseDate": "2023-01-01T00:00:00+03:00",
+    "DiscontinuedDate": null,
+    "Rating": 4,
+    "Price": 49.99
+  },
+  {
+    "ID": 8,
+    "Name": "Full Stack Development with SAP",
+    "Description": "Путеводитель по сквозной разработке на SAP: от базы данных до пользовательского интерфейса. Включает SAPUI5, OData, CDS, TypeScript и Fiori elements.",
+    "ReleaseDate": "2024-09-01T10:00:00+02:00",
+    "DiscontinuedDate": null,
+    "Rating": 5,
+    "Price": 84.99
+  },
+  {
+    "ID": 9,
+    "Name": "JavaScript for ABAP Developers",
+    "Description": "E-Bite для ABAP-разработчиков, которые хотят освоить JavaScript. Объясняет ключевые концепции, такие как переменные, функции, классы и работа с DOM, с примерами на ABAP.",
+    "ReleaseDate": "2021-02-15T11:30:00+01:00",
+    "DiscontinuedDate": "2024-12-31T23:59:59+01:00",
+    "Rating": 4,
+    "Price": 24.99
+  },
+  {
+    "ID": 10,
+    "Name": "Effective JavaScript",
+    "Description": "Книга о лучших практиках и методиках написания эффективного и поддерживаемого JavaScript-кода. Содержит 68 конкретных советов и примеров из реального мира.",
+    "ReleaseDate": "2012-11-15T13:45:00-05:00",
+    "DiscontinuedDate": null,
+    "Rating": 4,
+    "Price": 44.99
+  },
+  {
+    "ID": 11,
+    "Name": "SAP Fiori Elements – Development and Extensibility",
+    "Description": "Практическое руководство по разработке приложений SAP Fiori с минимальным написанием кода, с использованием SAP Fiori elements и OData.",
+    "ReleaseDate": "2024-05-01T09:30:00+02:00",
+    "DiscontinuedDate": null,
+    "Rating": 4,
+    "Price": 84.99
+  },
+  {
+    "ID": 12,
+    "Name": "JavaScript: The Good Parts",
+    "Description": "Классика, в которой Дуглас Крокфорд выделяет лучшие, наиболее надежные части JavaScript, призывая избегать его недостатков. Помогает писать качественный код.",
+    "ReleaseDate": "2008-05-01T10:00:00-07:00",
+    "DiscontinuedDate": "2023-12-31T23:59:59-08:00",
+    "Rating": 4,
+    "Price": 29.99
+  },
+  {
+    "ID": 13,
+    "Name": "JavaScript с нуля",
+    "Description": "Простой и понятный учебник по JavaScript. Избегает общих фраз и неясных терминов, используя подробные примеры, иллюстрации и схемы.",
+    "ReleaseDate": "2024-01-01T00:00:00+03:00",
+    "DiscontinuedDate": null,
+    "Rating": 3,
+    "Price": 39.99
+  },
+  {
+    "ID": 14,
+    "Name": "Testing SAPUI5 Applications",
+    "Description": "E-Bite о тестировании SAPUI5-приложений. Объясняет использование QUnit для модульного тестирования и OPA для приемочных тестов, а также мокирование бэкенда.",
+    "ReleaseDate": "2023-02-01T15:00:00+01:00",
+    "DiscontinuedDate": "2025-01-15T23:59:59+01:00",
+    "Rating": 3,
+    "Price": 24.99
+  },
+  {
+    "ID": 15,
+    "Name": "Learning JavaScript Design Patterns",
+    "Description": "Книга от Эдди Османи, в которой ясно и понятно объясняются основные паттерны проектирования в JavaScript для создания масштабируемых приложений.",
+    "ReleaseDate": "2012-08-15T12:00:00+00:00",
+    "DiscontinuedDate": null,
+    "Rating": 4,
+    "Price": 29.99
+  },
+  {
+    "ID": 16,
+    "Name": "SAP Gateway and OData",
+    "Description": "Незаменимое руководство для разработчиков и администраторов по настройке SAP Gateway и созданию OData-сервисов, необходимых для современных приложений.",
+    "ReleaseDate": "2020-12-15T08:00:00+01:00",
+    "DiscontinuedDate": null,
+    "Rating": 5,
+    "Price": 84.99
+  },
+  {
+    "ID": 17,
+    "Name": "Functional-Light JavaScript",
+    "Description": "Практическое введение в функциональное программирование от Кайла Симпсона. Объясняет его преимущества без излишней академичности.",
+    "ReleaseDate": "2016-06-01T09:00:00-04:00",
+    "DiscontinuedDate": null,
+    "Rating": 4,
+    "Price": 34.99
+  },
+  {
+    "ID": 18,
+    "Name": "Visual Studio Code for SAP",
+    "Description": "Практическое руководство по использованию Visual Studio Code для разработки SAP-приложений, включая интеграцию с SAP-системами и управление версиями.",
+    "ReleaseDate": "2024-11-01T10:30:00+01:00",
+    "DiscontinuedDate": null,
+    "Rating": 4,
+    "Price": 74.99
+  },
+  {
+    "ID": 19,
+    "Name": "Exploring ES6",
+    "Description": "Детальное руководство по ECMAScript 6 (ES2015) от Акселя Раушмайера. Описывает все нововведения и возможности стандарта.",
+    "ReleaseDate": "2015-06-01T14:00:00+02:00",
+    "DiscontinuedDate": null,
+    "Rating": 4,
+    "Price": 39.99
+  },
+  {
+    "ID": 20,
+    "Name": "SAP Fiori: Implementation and Development",
+    "Description": "Универсальный ресурс по внедрению и разработке SAP Fiori приложений. Охватывает конфигурацию, безопасность и разработку приложений.",
+    "ReleaseDate": "2020-10-01T11:00:00+02:00",
+    "DiscontinuedDate": null,
+    "Rating": 4,
+    "Price": 84.99
+  },
+  {
+    "ID": 21,
+    "Name": "JavaScript for Cats",
+    "Description": "Максимально простое и дружелюбное введение в JavaScript для самых начинающих. Помогает сделать первые шаги без страха.",
+    "ReleaseDate": "2013-05-01T18:30:00-07:00",
+    "DiscontinuedDate": "2022-12-31T23:59:59-08:00",
+    "Rating": 3,
+    "Price": 14.99
+  },
+  {
+    "ID": 22,
+    "Name": "Understanding ECMAScript 6",
+    "Description": "Книга Николаса Закаса, которая просто и ясно объясняет ключевые концепции и новые возможности ES6, помогая быстро перейти на современный JavaScript.",
+    "ReleaseDate": "2016-08-15T13:00:00-04:00",
+    "DiscontinuedDate": null,
+    "Rating": 4,
+    "Price": 29.99
+  },
+  {
+    "ID": 23,
+    "Name": "SAPUI5 – Debugging the User Interface",
+    "Description": "E-Bite по отладке пользовательского интерфейса SAP Fiori. Пошаговые инструкции по использованию Chrome Developer Tools и других методов.",
+    "ReleaseDate": "2023-06-01T16:45:00+02:00",
+    "DiscontinuedDate": "2025-02-01T23:59:59+01:00",
+    "Rating": 3,
+    "Price": 19.99
+  },
+  {
+    "ID": 24,
+    "Name": "Speaking JavaScript",
+    "Description": "Книга Акселя Раушмайера, предназначенная для программистов, переходящих на JavaScript с других языков. Объясняет особенности и тонкости языка.",
+    "ReleaseDate": "2014-03-15T10:00:00+01:00",
+    "DiscontinuedDate": null,
+    "Rating": 4,
+    "Price": 34.99
+  },
+  {
+    "ID": 25,
+    "Name": "Hands On with SAP Business Application Studio",
+    "Description": "Практическое руководство по работе в новой IDE от SAP для облачной разработки, включая сборку мобильных, Fiori и full-stack приложений.",
+    "ReleaseDate": "2024-03-01T08:30:00+01:00",
+    "DiscontinuedDate": null,
+    "Rating": 4,
+    "Price": 29.99
+  }
+]
