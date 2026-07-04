@@ -8,15 +8,19 @@
                 <IconTabFilter text="{i18n>iconTabFilterJsonModelText}" key="jsonmodel">
                     <content>
                         <Table id="booksTable" mode="MultiSelect" items="{view>/Books}"
-                            selectionChange=".onTableSelectionChange">
+                            selectionChange=".onAnyTableSelectionChange">
+                            <customData>
+                                <core:CustomData key="deleteEnabledPath"
+                                    value="/tabs/json/deleteEnabled" />
+                            </customData>
                             <headerToolbar>
                                 <Toolbar>
                                     <ToolbarSpacer />
                                     <Button text="{i18n>buttonAddRecord}" press=".onAddRecord"
                                         type="Accept"></Button>
-                                    <Button text="{i18n>buttonDeleteRecord}" press=".onDeleteRecord"
-                                        type="Reject"
-                                        enabled="{view>/IsDeleteButtonEnabled}"></Button>
+                                    <Button text="{i18n>buttonDeleteRecord}"
+                                        press=".onDeleteRecordJson" type="Reject"
+                                        enabled="{ui>/tabs/json/deleteEnabled}"></Button>
                                     <ToolbarSeparator />
                                     <Input width="50%" id="searchByTitleInput"
                                         placeholder="{i18n>inputSearchByTitle}"></Input>
@@ -97,7 +101,22 @@
                 </IconTabFilter>
                 <IconTabFilter text="{i18n>iconTabFilterOData2Text}" key="odatav2">
                     <content>
-                        <Table items="{v2Model>/Products}">
+                        <Table id="productsV2Table" items="{v2Model>/Products}" mode="MultiSelect"
+                            rememberSelections="false" selectionChange=".onAnyTableSelectionChange">
+                            <customData>
+                                <core:CustomData key="deleteEnabledPath"
+                                    value="/tabs/odatav2/deleteEnabled" />
+                            </customData>
+                            <headerToolbar>
+                                <OverflowToolbar>
+                                    <content>
+                                        <ToolbarSpacer />
+                                        <Button text="{i18n>ODataV2DeleteButton}" type="Reject"
+                                            enabled="{ui>/tabs/odatav2/deleteEnabled}"
+                                            press=".onDeleteRecordV2"></Button>
+                                    </content>
+                                </OverflowToolbar>
+                            </headerToolbar>
                             <columns>
                                 <Column>
                                     <Text text="{i18n>columnOdataV2Id}"></Text>

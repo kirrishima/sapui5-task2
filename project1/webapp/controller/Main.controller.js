@@ -6,8 +6,10 @@ sap.ui.define(
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/core/library",
+    "sap/m/MessageToast",
+    "sap/m/MessageBox",
   ],
-  (BaseController, JSONModel,ODataModelv2, Filter, FilterOperator, coreLibrary) => {
+  (BaseController, JSONModel, ODataModelv2, Filter, FilterOperator, coreLibrary, MessageToast, MessageBox) => {
     "use strict";
 
     const ValueState = coreLibrary.ValueState;
@@ -34,8 +36,20 @@ sap.ui.define(
           this.getView().setModel(filtersModel, "filters");
         }, this);
 
-        
-        this.getView()?.setModel(viewModel, "view");
+        const view = this.getView();
+
+        view?.setModel(viewModel, "view");
+
+        const uiModel = new JSONModel({
+          tabs: {
+            json: { deleteEnabled: false },
+            odatav2: { deleteEnabled: false },
+            odatav4: { deleteEnabled: false },
+          },
+        });
+
+        view?.setModel(uiModel, "ui");
+        this._uiModel = uiModel;
       },
 
       async onAddRecord() {
@@ -133,50 +147,124 @@ sap.ui.define(
         this._addRecordDialog.close();
       },
 
-      async onDeleteRecord() {
-        const selectedItems = this.byId("booksTable").getSelectedItems();
-        const selectedIds = selectedItems.map((item) => item.getBindingContext("view").getObject().ID);
+      async _deleteSelected({ tableId, bindingModel, uiPath, deleteFn }) {
+        const table = this.byId(tableId);
+        const selectedItems = table.getSelectedItems();
 
-        if (!selectedIds.length) {
+        if (!selectedItems.length) {
           return;
         }
 
-        this._viewModel.setProperty("/SelectedIds", selectedIds);
+        const contexts = selectedItems.map((item) => item.getBindingContext(bindingModel));
+        const ids = contexts.map((context) => context.getObject().ID);
+
+        await this._openDeleteConfirmationDialog({
+          displayIds: ids,
+          onConfirm: async () => {
+            await deleteFn({ ids, contexts });
+
+            table.removeSelections();
+            this._uiModel.setProperty(uiPath, false);
+          },
+        });
+      },
+
+      onDeleteRecordJson() {
+        return this._deleteSelected({
+          tableId: "booksTable",
+          bindingModel: "view",
+          uiPath: "/tabs/json/deleteEnabled",
+          deleteFn: ({ ids }) => {
+            const books = this._viewModel.getProperty("/Books");
+            this._viewModel.setProperty(
+              "/Books",
+              books.filter((book) => !ids.includes(book.ID)),
+            );
+          },
+        });
+      },
+
+      onDeleteRecordV2() {
+        return this._deleteSelected({
+          tableId: "productsV2Table",
+          bindingModel: "v2Model",
+          uiPath: "/tabs/odatav2/deleteEnabled",
+
+          deleteFn: ({ contexts }) => {
+            const odataModel = this.getModel("v2Model");
+            const resourceBundle = this.getModel("i18n").getResourceBundle();
+
+            contexts.forEach((context) => {
+              odataModel.remove(context.getPath(), { groupId: "changes" });
+            });
+
+            return new Promise((resolve, reject) => {
+              odataModel.submitChanges({
+                groupId: "changes",
+                success: (data) => {
+                  const hasErrors = (data.__batchResponses?.[0]?.__changeResponses || []).some(
+                    (resp) => resp.statusCode >= 400,
+                  );
+
+                  if (hasErrors) {
+                    MessageBox.error(resourceBundle.getText("ODataDeletePartialFails"));
+                  } else {
+                    MessageToast.show(resourceBundle.getText("ODataDeleteSuccess"));
+                  }
+
+                  resolve();
+                },
+                error: (err) => {
+                  MessageBox.error(resourceBundle.getText("ODataDeleteError"));
+                  reject(err);
+                },
+              });
+            });
+          },
+        });
+      },
+
+      onAnyTableSelectionChange(event) {
+        const table = event.getSource();
+        const propertyPath = table
+          .getCustomData()
+          .find((data) => data.getKey() === "deleteEnabledPath")
+          ?.getValue();
+
+        if (!propertyPath) {
+          return;
+        }
+
+        this._uiModel.setProperty(propertyPath, !!table.getSelectedItems().length);
+      },
+
+      async _openDeleteConfirmationDialog({ displayIds, onConfirm }) {
+        this._viewModel.setProperty("/SelectedIds", displayIds);
+        this._pendingDeleteConfirmCallback = onConfirm;
 
         if (!this._confirmDeletionDialog) {
           this._confirmDeletionDialog = await this.loadFragment({
             name: "module:project1/fragment/ConfirmDeletionDialog",
           });
         }
-
         this._confirmDeletionDialog.open();
       },
 
-      onTableSelectionChange(event) {
-        this.getModel("view")?.setProperty(
-          "/IsDeleteButtonEnabled",
-          !!this.byId("booksTable")?.getSelectedItems()?.length,
-        );
-      },
-
-      onConfirmDeletion() {
-        const selectedIds = this._viewModel.getProperty("/SelectedIds");
-        const books = this._viewModel.getProperty("/Books");
-
-        this._viewModel.setProperty(
-          "/Books",
-          books.filter((book) => !selectedIds.includes(book.ID)),
-        );
-
-        this.byId("booksTable").removeSelections();
-        this._viewModel.setProperty("/IsDeleteButtonEnabled", false);
+      async onConfirmDeletion() {
+        const confirm = this._pendingDeleteConfirmCallback;
+        this._confirmDeletionDialog.close();
         this._viewModel.setProperty("/SelectedIds", []);
 
-        this._confirmDeletionDialog.close();
+        if (confirm) {
+          await confirm();
+        }
+
+        this._pendingDeleteConfirmCallback = null;
       },
 
       onCancelDeletion() {
         this._confirmDeletionDialog.close();
+        this._pendingDeleteConfirmCallback = null;
       },
 
       onFilter(event) {
