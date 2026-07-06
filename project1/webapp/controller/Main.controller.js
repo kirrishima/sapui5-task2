@@ -87,17 +87,6 @@ sap.ui.define(
         this._addRecordDialog.close();
       },
 
-      _getNewRecordInputFields() {
-        return {
-          ID: this.byId(""),
-          Name: this.byId(""),
-          Author: this.byId(""),
-          Genre: this.byId(""),
-          ReleaseDate: this.byId("dialogDatePicker"),
-          AvailableQuantity: this.byId("dialogInputAvailableQuantity"),
-        };
-      },
-
       _clearNewRecordValidation() {
         [
           "dialogInputId",
@@ -106,7 +95,7 @@ sap.ui.define(
           "dialogInputGenre",
           "dialogDatePicker",
           "dialogInputAvailableQuantity",
-        ].forEach((id) => this.byId(id).setValueState(ValueState.None));
+        ].forEach((id) => this.byId(id)?.setValueState(ValueState.None));
       },
 
       _validateNewRecordModel() {
@@ -205,10 +194,7 @@ sap.ui.define(
               });
 
               try {
-                await this.applySubmitChanges({
-                  successTextKey: "ODataDeleteSuccess",
-                  errorTextKey: "ODataDeleteError",
-                });
+                await this.applySubmitChanges();
 
                 table.removeSelections();
                 this._uiModel.setProperty("/tabs/odatav2/deleteEnabled", false);
