@@ -205,13 +205,14 @@ sap.ui.define(
               });
 
               try {
-                await this.applySubmitChanges();
-                MessageToast.show(this._resourceBundle.getText("ODataDeleteSuccess"));
+                await this.applySubmitChanges({
+                  successTextKey: "ODataDeleteSuccess",
+                  errorTextKey: "ODataDeleteError",
+                });
+
                 table.removeSelections();
                 this._uiModel.setProperty("/tabs/odatav2/deleteEnabled", false);
-              } catch (error) {
-                MessageBox.error(this._resourceBundle.getText("ODataDeleteError"));
-              }
+              } catch {}
             }
           },
         });
