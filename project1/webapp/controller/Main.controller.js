@@ -49,7 +49,9 @@ sap.ui.define(
         });
 
         view?.setModel(uiModel, "ui");
+        this._v2Model = this.getOwnerComponent().getModel("v2Model");
         this._uiModel = uiModel;
+        this._resourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
       },
 
       async onAddRecord() {
@@ -87,37 +89,45 @@ sap.ui.define(
 
       _getNewRecordInputFields() {
         return {
-          ID: this.byId("dialogInputId"),
-          Name: this.byId("dialogInputName"),
-          Author: this.byId("dialogInputAuthor"),
-          Genre: this.byId("dialogInputGenre"),
+          ID: this.byId(""),
+          Name: this.byId(""),
+          Author: this.byId(""),
+          Genre: this.byId(""),
           ReleaseDate: this.byId("dialogDatePicker"),
           AvailableQuantity: this.byId("dialogInputAvailableQuantity"),
         };
       },
 
       _clearNewRecordValidation() {
-        const fields = this._getNewRecordInputFields();
-        for (const field of Object.values(fields)) {
-          field.setValueState(ValueState.None);
-        }
+        [
+          "dialogInputId",
+          "dialogInputName",
+          "dialogInputAuthor",
+          "dialogInputGenre",
+          "dialogDatePicker",
+          "dialogInputAvailableQuantity",
+        ].forEach((id) => this.byId(id).setValueState(ValueState.None));
       },
 
       _validateNewRecordModel() {
         this._clearNewRecordValidation();
         const data = this._viewModel.getProperty("/NewRecord");
         let valid = true;
-        const fields = this._getNewRecordInputFields();
 
-        ["ID", "Name", "Author", "Genre"].forEach((key) => {
+        [
+          ["ID", "dialogInputId"],
+          ["Name", "dialogInputName"],
+          ["Author", "dialogInputAuthor"],
+          ["Genre", "dialogInputGenre"],
+        ].forEach(([key, id]) => {
           if (!data[key]) {
-            fields[key].setValueState(ValueState.Error);
+            this.byId(id).setValueState(ValueState.Error);
             valid = false;
           }
         });
 
         if (!data.ReleaseDate || !this.dateRegex.test(data.ReleaseDate)) {
-          fields.ReleaseDate.setValueState(ValueState.Error);
+          this.byId("dialogDatePicker").setValueState(ValueState.Error);
           valid = false;
         }
 
@@ -125,8 +135,9 @@ sap.ui.define(
           data.AvailableQuantity !== "" && data.AvailableQuantity !== null ? Number(data.AvailableQuantity) : NaN;
 
         if (!Number.isInteger(quantity) || quantity < 0) {
-          fields.AvailableQuantity.setValueState(ValueState.Error);
-          fields.AvailableQuantity.setValueStateText(
+          const quantityInput = this.byId("dialogInputAvailableQuantity");
+          quantityInput.setValueState(ValueState.Error);
+          quantityInput.setValueStateText(
             this.getModel("i18n").getSourceBundle().getText("dialogAddRecordErrorInvalidQuantity"),
           );
           valid = false;
@@ -147,79 +158,61 @@ sap.ui.define(
         this._addRecordDialog.close();
       },
 
-      async _deleteSelected({ tableId, bindingModel, uiPath, deleteFn }) {
-        const table = this.byId(tableId);
+      onDeleteRecordJson() {
+        const table = this.byId("booksTable");
         const selectedItems = table.getSelectedItems();
 
         if (!selectedItems.length) {
           return;
         }
 
-        const contexts = selectedItems.map((item) => item.getBindingContext(bindingModel));
+        const contexts = selectedItems.map((item) => item.getBindingContext("view"));
         const ids = contexts.map((context) => context.getObject().ID);
 
-        await this._openDeleteConfirmationDialog({
-          displayIds: ids,
-          onConfirm: async () => {
-            await deleteFn({ ids, contexts });
+        MessageBox.confirm(this._resourceBundle.getText("dialogConfirmDeletionContent", [contexts.length]), {
+          title: this._resourceBundle.getText("dialogConfirmDeletionTitle"),
+          onClose: async (actionText) => {
+            if (actionText === MessageBox.Action.OK) {
+              const books = this._viewModel.getProperty("/Books");
+              this._viewModel.setProperty(
+                "/Books",
+                books.filter((book) => !ids.includes(book.ID)),
+              );
 
-            table.removeSelections();
-            this._uiModel.setProperty(uiPath, false);
-          },
-        });
-      },
-
-      onDeleteRecordJson() {
-        return this._deleteSelected({
-          tableId: "booksTable",
-          bindingModel: "view",
-          uiPath: "/tabs/json/deleteEnabled",
-          deleteFn: ({ ids }) => {
-            const books = this._viewModel.getProperty("/Books");
-            this._viewModel.setProperty(
-              "/Books",
-              books.filter((book) => !ids.includes(book.ID)),
-            );
+              table.removeSelections();
+              this._uiModel.setProperty("/tabs/json/deleteEnabled", false);
+            }
           },
         });
       },
 
       onDeleteRecordV2() {
-        return this._deleteSelected({
-          tableId: "productsV2Table",
-          bindingModel: "v2Model",
-          uiPath: "/tabs/odatav2/deleteEnabled",
+        const table = this.byId("productsV2Table");
+        const selectedItems = table.getSelectedItems();
 
-          deleteFn: ({ contexts }) => {
-            const odataModel = this.getModel("v2Model");
-            const resourceBundle = this.getModel("i18n").getResourceBundle();
+        if (!selectedItems.length) {
+          return;
+        }
 
-            contexts.forEach((context) => {
-              odataModel.remove(context.getPath(), { groupId: "changes" });
-            });
+        const contexts = selectedItems.map((item) => item.getBindingContext("v2Model"));
 
-            return new Promise((resolve, reject) => {
-              odataModel.submitChanges({
-                groupId: "changes",
-                success: (data) => {
-                  const hasErrors = (data.__batchResponses?.[0]?.__changeResponses || []).some(
-                    (resp) => resp.statusCode >= 400,
-                  );
-
-                  if (hasErrors) {
-                    MessageBox.error(resourceBundle.getText("ODataDeletePartialFails"));
-                  } else {
-                    MessageToast.show(resourceBundle.getText("ODataDeleteSuccess"));
-                  }
-
-                  resolve();
-                },
-                error: (err) => {
-                  MessageBox.error(resourceBundle.getText("ODataDeleteError"));
-                  reject(err);
-                },
+        MessageBox.confirm(this._resourceBundle.getText("dialogConfirmDeletionContent", [contexts.length]), {
+          title: this._resourceBundle.getText("dialogConfirmDeletionTitle"),
+          onClose: async (actionText) => {
+            if (actionText === MessageBox.Action.OK) {
+              contexts.forEach((context) => {
+                this._v2Model.remove(context.getPath(), { groupId: "changes" });
               });
-            });
+
+              try {
+                await this.applySubmitChanges();
+                MessageToast.show(this._resourceBundle.getText("ODataDeleteSuccess"));
+                table.removeSelections();
+                this._uiModel.setProperty("/tabs/odatav2/deleteEnabled", false);
+              } catch (error) {
+                MessageBox.error(this._resourceBundle.getText("ODataDeleteError"));
+              }
+            }
           },
         });
       },
@@ -236,35 +229,6 @@ sap.ui.define(
         }
 
         this._uiModel.setProperty(propertyPath, !!table.getSelectedItems().length);
-      },
-
-      async _openDeleteConfirmationDialog({ displayIds, onConfirm }) {
-        this._viewModel.setProperty("/SelectedIds", displayIds);
-        this._pendingDeleteConfirmCallback = onConfirm;
-
-        if (!this._confirmDeletionDialog) {
-          this._confirmDeletionDialog = await this.loadFragment({
-            name: "module:project1/fragment/ConfirmDeletionDialog",
-          });
-        }
-        this._confirmDeletionDialog.open();
-      },
-
-      async onConfirmDeletion() {
-        const confirm = this._pendingDeleteConfirmCallback;
-        this._confirmDeletionDialog.close();
-        this._viewModel.setProperty("/SelectedIds", []);
-
-        if (confirm) {
-          await confirm();
-        }
-
-        this._pendingDeleteConfirmCallback = null;
-      },
-
-      onCancelDeletion() {
-        this._confirmDeletionDialog.close();
-        this._pendingDeleteConfirmCallback = null;
       },
 
       onFilter(event) {
