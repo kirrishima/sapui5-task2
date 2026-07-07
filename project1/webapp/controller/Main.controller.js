@@ -324,6 +324,24 @@ sap.ui.define(
         return results.every(Boolean);
       },
 
+      onOdataV2Search(event) {
+        const value = event.getParameter("value");
+        const filters = [];
+
+        if (value) {
+          filters.push(
+            new Filter({
+              path: "Name",
+              operator: FilterOperator.Contains,
+              value1: value,
+              caseSensitive: false,
+            }),
+          );
+        }
+
+        this.byId("productsV2Table")?.getBinding("items")?.filter(filters);
+      },
+
       onAnyTableSelectionChange(event) {
         const table = event.getSource();
         const propertyPath = table

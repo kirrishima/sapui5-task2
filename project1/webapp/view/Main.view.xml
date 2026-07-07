@@ -108,8 +108,9 @@
                                     value="/tabs/odatav2/deleteEnabled" />
                             </customData>
                             <headerToolbar>
-                                <OverflowToolbar>
+                                <Toolbar>
                                     <content>
+                                        <Input placeholder="{i18n>odatav2TableNameSerachInputPlaceholder}" liveChange=".onOdataV2Search"></Input>
                                         <ToolbarSpacer />
                                         <Button text="{i18n>ODataV2ButtonAddNewRecord}"
                                             type="Accept" press=".onAddRecordOdataV2"></Button>
@@ -117,7 +118,7 @@
                                             enabled="{ui>/tabs/odatav2/deleteEnabled}"
                                             press=".onDeleteRecordV2"></Button>
                                     </content>
-                                </OverflowToolbar>
+                                </Toolbar>
                             </headerToolbar>
                             <columns>
                                 <Column>
@@ -201,7 +202,6 @@
                                                 path: 'v4Model>ReleaseDate',
                                                 targetType: 'any'
                                             }" />
-
                                         <Text
                                             text="{
                                                 path: 'v4Model>DiscontinuedDate',
