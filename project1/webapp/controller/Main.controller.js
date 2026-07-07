@@ -3,13 +3,14 @@ sap.ui.define(
     "./BaseController",
     "sap/ui/model/json/JSONModel",
     "sap/ui/model/odata/v2/ODataModel",
+    "sap/ui/model/Sorter",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
     "sap/ui/core/library",
     "sap/m/MessageToast",
     "sap/m/MessageBox",
   ],
-  (BaseController, JSONModel, ODataModelv2, Filter, FilterOperator, coreLibrary, MessageToast, MessageBox) => {
+  (BaseController, JSONModel, ODataModelv2, Sorter, Filter, FilterOperator, coreLibrary, MessageToast, MessageBox) => {
     "use strict";
 
     const ValueState = coreLibrary.ValueState;
@@ -40,18 +41,31 @@ sap.ui.define(
 
         view?.setModel(viewModel, "view");
 
+        this._v2Model = this.getOwnerComponent().getModel("v2Model");
+        this._resourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
+
         const uiModel = new JSONModel({
           tabs: {
             json: { deleteEnabled: false },
-            odatav2: { deleteEnabled: false },
+            odatav2: {
+              deleteEnabled: false,
+              sortableColumns: [
+                { key: "", text: this._resourceBundle.getText("odatav2SortNoneOption") },
+                { key: "ID", text: this._resourceBundle.getText("columnOdataV2Id") },
+                { key: "Name", text: this._resourceBundle.getText("columnOdataV2Name") },
+                { key: "Description", text: this._resourceBundle.getText("columnOdataV2Description") },
+                { key: "ReleaseDate", text: this._resourceBundle.getText("columnOdataV2ReleaseDate") },
+                { key: "DiscontinuedDate", text: this._resourceBundle.getText("columnOdataV2DiscontinuedDate") },
+                { key: "Rating", text: this._resourceBundle.getText("columnOdataV2Rating") },
+                { key: "Price", text: this._resourceBundle.getText("columnOdataV2Price") },
+              ],
+            },
             odatav4: { deleteEnabled: false },
           },
         });
 
         view?.setModel(uiModel, "ui");
-        this._v2Model = this.getOwnerComponent().getModel("v2Model");
         this._uiModel = uiModel;
-        this._resourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
       },
 
       async onAddRecord() {
@@ -340,6 +354,13 @@ sap.ui.define(
         }
 
         this.byId("productsV2Table")?.getBinding("items")?.filter(filters);
+      },
+
+      onOdataV2Sort(event) {
+        const selectedKey = event.getParameter("selectedItem")?.getKey();
+        let sorter = selectedKey ? new Sorter({ path: selectedKey, descending: true }) : [];
+
+        this.byId("productsV2Table")?.getBinding("items")?.sort(sorter);
       },
 
       onAnyTableSelectionChange(event) {
