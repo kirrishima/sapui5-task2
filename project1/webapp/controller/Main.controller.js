@@ -204,6 +204,119 @@ sap.ui.define(
         });
       },
 
+      async onAddRecordOdataV2() {
+        var iNewId = Math.floor(Date.now() / 1_000_000);
+
+        this._newEntryContext = this._v2Model.createEntry("/Products", {
+          properties: {
+            ID: iNewId,
+            Name: "",
+            Description: "",
+            ReleaseDate: new Date(),
+            DiscontinuedDate: null,
+            Rating: 0,
+            Price: "0",
+          },
+        });
+
+        if (!this._createNewOdataV2RecordDialog) {
+          this._createNewOdataV2RecordDialog = await this.loadFragment({
+            name: "project1.view.AddOdataV2Products",
+          });
+        }
+
+        this._createNewOdataV2RecordDialog.setBindingContext(this._newEntryContext, "v2Model");
+        this._createNewOdataV2RecordDialog.open();
+      },
+
+      onCreateODataV2Record() {
+        var valid = this._validateFieldGroup();
+
+        if (!valid) {
+          return;
+        }
+
+        this._v2Model.submitChanges({
+          success: (data) => {
+            MessageToast.show(this._resourceBundle.getText("createODataV2RecordDialogSuccessMessage"));
+            this._createNewOdataV2RecordDialog.close();
+            this._newEntryContext = null;
+          },
+          error: () => MessageBox.error(this._resourceBundle.getText("createODataV2RecordDialogCrationFailedMessage")),
+        });
+      },
+
+      onCancelODataV2RecordCreation() {
+        if (this._newEntryContext) {
+          this._v2Model.deleteCreatedEntry(this._newEntryContext);
+          this._newEntryContext = null;
+        }
+
+        this._createNewOdataV2RecordDialog.close();
+      },
+
+      _validateFieldGroup() {
+        const controls = this._createNewOdataV2RecordDialog.getControlsByFieldGroupId("odatav2ProductForm");
+        let valid = true;
+
+        controls.forEach((control) => {
+          if (control.isA("sap.m.Input") && control.getBinding("value")) {
+            const value = control.getValue();
+
+            if (this.getView().getLocalId(control.getId()) === "odatav2ReleaseRating") {
+              valid &= this._validateOdatav2ReleaseRatingControl(control);
+            } else if (this.getView().getLocalId(control.getId()) === "odatav2PriceInput") {
+              valid &= this._validateOdatav2PriceInput(control);
+            } else if (!value) {
+              valid = false;
+              control.setValueState("Error");
+            } else {
+              control.setValueState("None");
+            }
+          } else if (control.isA("sap.m.DatePicker") && control.getBinding("value")) {
+            const value = control.getValue();
+            const dateValue = control.getDateValue();
+            if (!value || !dateValue || !control.isValidValue()) {
+              valid = false;
+              control.setValueState("Error");
+            } else {
+              control.setValueState("None");
+            }
+          }
+        });
+
+        return valid;
+      },
+
+      _validateOdatav2ReleaseRatingControl(control) {
+        const value = control.getValue();
+        let valid = true;
+        if (value && (value < 0 || value > 5)) {
+          control.setValueState("Error");
+          control.setValueStateText(
+            this._resourceBundle.getText("createODataV2RecordDialogInputRatingRangeError", [0, 5]),
+          );
+          valid = false;
+        } else {
+          control.setValueState("None");
+        }
+        return valid;
+      },
+
+      _validateOdatav2PriceInput(control) {
+        const value = control.getValue();
+        let valid = true;
+        if (value && value < 0) {
+          control.setValueState("Error");
+          control.setValueStateText(this._resourceBundle.getText("createODataV2RecordDialogInputPriceRangeError"));
+          valid = false;
+        } else {
+          control.setValueState("None");
+        }
+
+        return valid;
+      },
+
       onAnyTableSelectionChange(event) {
         const table = event.getSource();
         const propertyPath = table

@@ -78,7 +78,10 @@
       },
       "v2Model": {
         "dataSource": "ODataV2Source",
-        "preload": true
+        "preload": true,
+        "settings": {
+          "defaultBindingMode": "TwoWay"
+        }
       },
       "v4Model": {
         "dataSource": "ODataV4Source",
