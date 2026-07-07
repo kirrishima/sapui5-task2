@@ -111,6 +111,9 @@
                                 <Toolbar>
                                     <content>
                                         <Input placeholder="{i18n>odatav2TableNameSerachInputPlaceholder}" liveChange=".onOdataV2Search"></Input>
+                                        <ComboBox placeholder="{i18n>odatav2TableSortComboBoxPlaceholder}" selectionChange=".onOdataV2Sort" items="{ui>/tabs/odatav2/sortableColumns}">
+                                            <core:Item key="{ui>key}" text="{ui>text}" />
+                                        </ComboBox>
                                         <ToolbarSpacer />
                                         <Button text="{i18n>ODataV2ButtonAddNewRecord}"
                                             type="Accept" press=".onAddRecordOdataV2"></Button>
