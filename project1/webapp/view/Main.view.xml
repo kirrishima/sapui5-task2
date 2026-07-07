@@ -111,6 +111,8 @@
                                 <OverflowToolbar>
                                     <content>
                                         <ToolbarSpacer />
+                                        <Button text="{i18n>ODataV2ButtonAddNewRecord}"
+                                            type="Accept" press=".onAddRecordOdataV2"></Button>
                                         <Button text="{i18n>ODataV2DeleteButton}" type="Reject"
                                             enabled="{ui>/tabs/odatav2/deleteEnabled}"
                                             press=".onDeleteRecordV2"></Button>
