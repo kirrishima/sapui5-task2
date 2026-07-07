@@ -5,27 +5,25 @@
     <Dialog
         id="odataV2AddNewProductsDialog"
         type="Message"
-        title="{i18n>createODataV2RecordDialogTitle}">
+        title="{ui>/tabs/odatav2/AddOrEdditDialogTitle}">
         <content>
             <l:VerticalLayout width="100%">
                 <VBox class="sapUiSmallMarginBottom">
                     <Label text="{i18n>createODataV2RecordDialogLabelId}"
                         labelFor="odatav2IdInput" required="true" />
-                    <Input id="odatav2IdInput" fieldGroupIds="odatav2ProductForm"
+                    <Input id="odatav2IdInput" fieldGroupIds="odatav2ProductForm" required="true"
                         value="{
                             path: 'v2Model>ID',
-                            type: 'sap.ui.model.odata.type.Int32',
-                            constraints: { nullable: false }
+                            type: 'sap.ui.model.odata.type.Int32'
                         }" />
                 </VBox>
                 <VBox class="sapUiSmallMarginBottom">
                     <Label text="{i18n>createODataV2RecordDialogLabelName}"
                         labelFor="odatav2NameInput" required="true" />
-                    <Input id="odatav2NameInput" fieldGroupIds="odatav2ProductForm"
+                    <Input id="odatav2NameInput" fieldGroupIds="odatav2ProductForm" required="true"
                         value="{
                             path: 'v2Model>Name',
-                            type: 'sap.ui.model.odata.type.String',
-                            constraints: { nullable: false, maxLength: 40 }
+                            type: 'sap.ui.model.odata.type.String'
                         }" />
                 </VBox>
                 <VBox class="sapUiSmallMarginBottom">
@@ -41,10 +39,10 @@
                     <Label text="{i18n>createODataV2RecordDialogLabelReleaseDate}"
                         labelFor="odatav2ReleaseDateInput" required="true" />
                     <DatePicker id="odatav2ReleaseDateInput" fieldGroupIds="odatav2ProductForm"
+                        required="true"
                         value="{
                             path: 'v2Model>ReleaseDate',
-                            type: 'sap.ui.model.odata.type.DateTime',
-                            constraints: { displayFormat: 'Date', nullable: false }
+                            type: 'sap.ui.model.odata.type.DateTime'
                         }" />
                 </VBox>
                 <VBox class="sapUiSmallMarginBottom">
@@ -53,28 +51,29 @@
                     <DatePicker id="odatav2DiscontinuedDateInput" fieldGroupIds="odatav2ProductForm"
                         value="{
                             path: 'v2Model>DiscontinuedDate',
-                            type: 'sap.ui.model.odata.type.DateTime',
-                            constraints: { displayFormat: 'Date' }
+                            type: 'sap.ui.model.odata.type.DateTime'
                         }" />
                 </VBox>
                 <VBox class="sapUiSmallMarginBottom">
                     <Label text="{i18n>createODataV2RecordDialogLabelRating}"
                         labelFor="odatav2ReleaseRating" required="true" />
                     <Input id="odatav2ReleaseRating" fieldGroupIds="odatav2ProductForm"
+                        valueStateText="{i18n>createODataV2RecordDialogInputRatingRangeError}"
+                        required="true"
                         value="{
                             path: 'v2Model>Rating',
-                            type: 'sap.ui.model.odata.type.Int32',
-                            constraints: { nullable: false}
+                            type: 'sap.ui.model.odata.type.Int32'
                         }" />
                 </VBox>
                 <VBox class="sapUiSmallMarginBottom">
                     <Label text="{i18n>createODataV2RecordDialogLabelPrice}"
                         labelFor="odatav2PriceInput" required="true" />
                     <Input id="odatav2PriceInput" fieldGroupIds="odatav2ProductForm"
+                        valueStateText="{i18n>createODataV2RecordDialogInputPriceRangeError}"
+                        required="true"
                         value="{
                             path: 'v2Model>Price',
-                            type: 'sap.ui.model.odata.type.Decimal',
-                            constraints: { nullable: false, precision: 10, scale: 2, minimum: '0' }
+                            type: 'sap.ui.model.odata.type.Decimal'
                         }" />
                 </VBox>
             </l:VerticalLayout>

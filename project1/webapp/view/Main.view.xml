@@ -141,6 +141,9 @@
                                 <Column>
                                     <Text text="{i18n>columnOdataV2Price}"></Text>
                                 </Column>
+                                <Column>
+                                    <Text text="{i18n>columnOdataV2Actions}"></Text>
+                                </Column>
                             </columns>
                             <items>
                                 <ColumnListItem>
@@ -152,6 +155,9 @@
                                         <Text text="{v2Model>DiscontinuedDate}"></Text>
                                         <Text text="{v2Model>Rating}"></Text>
                                         <Text text="{v2Model>Price}"></Text>
+                                        <HBox>
+                                            <Button text="{i18n>ODataV2EditButton}" press=".onEditRecordOdataV2"></Button>
+                                        </HBox>
                                     </cells>
                                 </ColumnListItem>
                             </items>
