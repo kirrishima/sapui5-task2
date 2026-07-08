@@ -218,24 +218,26 @@ sap.ui.define(
         });
       },
 
-      async _openAddEditNewProductOdataV2Dialog({ titleI18nKey, context }) {
-        this._uiModel.setProperty("/tabs/odatav2/AddOrEdditDialogTitle", this._resourceBundle.getText(titleI18nKey));
+      _setDialogControlsByFieldGroupIdValueState(dialog, fieldGroup, state) {
+        const controls = dialog.getControlsByFieldGroupId(fieldGroup);
+        controls.forEach((control) => {
+          if ((control.isA("sap.m.Input") || control.isA("sap.m.DatePicker")) && control.getBinding("value")) {
+            control.setValueState(state);
+          }
+        });
+      },
 
-        if (!this._addEditNewProductOdataV2Dialog) {
-          this._addEditNewProductOdataV2Dialog = await this.loadFragment({
+      async _openAddNewProductOdataV2Dialog({ context }) {
+        if (!this._addNewProductOdataV2Dialog) {
+          this._addNewProductOdataV2Dialog = await this.loadFragment({
             name: "project1.view.AddOdataV2Products",
           });
         }
 
-        const controls = this._addEditNewProductOdataV2Dialog.getControlsByFieldGroupId("odatav2ProductForm");
-        controls.forEach((control) => {
-          if ((control.isA("sap.m.Input") || control.isA("sap.m.DatePicker")) && control.getBinding("value")) {
-            control.setValueState("None");
-          }
-        });
+        this._setDialogControlsByFieldGroupIdValueState(this._addNewProductOdataV2Dialog, "odatav2ProductForm", "None");
 
-        this._addEditNewProductOdataV2Dialog.setBindingContext(context, "v2Model");
-        this._addEditNewProductOdataV2Dialog.open();
+        this._addNewProductOdataV2Dialog.setBindingContext(context, "v2Model");
+        this._addNewProductOdataV2Dialog.open();
       },
 
       async onAddRecordOdataV2() {
@@ -253,34 +255,73 @@ sap.ui.define(
           },
         });
 
-        await this._openAddEditNewProductOdataV2Dialog({
-          titleBindingPath: "/tabs/odatav2/AddOrEdditDialogTitle",
-          titleI18nKey: "createODataV2RecordDialogTitle",
+        await this._openAddNewProductOdataV2Dialog({
           context: this._newOdataV2ProductContext,
         });
       },
 
       async onEditRecordOdataV2(event) {
         const context = event.getSource().getBindingContext("v2Model");
-        await this._openAddEditNewProductOdataV2Dialog({
-          titleI18nKey: "editODataV2RecordDialogTitle",
-          context: context,
-        });
+        this._uiModel.setProperty("/tabs/odatav2/EditedProduct", context.getObject());
 
+        if (!this._editProductOdataV2Dialog) {
+          this._editProductOdataV2Dialog = await this.loadFragment({
+            name: "project1.view.EditOdataV2Products",
+          });
+        }
+
+        this._setDialogControlsByFieldGroupIdValueState(
+          this._editProductOdataV2Dialog,
+          "odatav2EditProductForm",
+          "None",
+        );
+
+        this._editProductOdataV2Dialog.open();
         this._editingOdataV2ProductPath = context.getPath();
       },
 
+      onEditProductOdataV2Confirm() {
+        const controls = this._editProductOdataV2Dialog.getControlsByFieldGroupId("odatav2EditProductForm");
+        if (!this._validateFieldGroup(controls)) {
+          return;
+        }
+
+        this._v2Model.update(
+          this._editingOdataV2ProductPath,
+          this._uiModel.getProperty("/tabs/odatav2/EditedProduct"),
+          {
+            success: (data) => {
+              MessageToast.show(this._resourceBundle.getText("createODataV2RecordDialogSuccessMessage"));
+              this._editProductOdataV2Dialog.close();
+              this._editingOdataV2ProductPath = null;
+              this._uiModel.setProperty("/tabs/odatav2/EditedProduct", null);
+            },
+            error: () =>
+              MessageBox.error(this._resourceBundle.getText("createODataV2RecordDialogCrationFailedMessage")),
+          },
+        );
+      },
+
+      onEditProductOdataV2Cancel() {
+        if (this._editingOdataV2ProductPath) {
+          this._uiModel.setProperty("/tabs/odatav2/EditedProduct", null);
+          this._editingOdataV2ProductPath = null;
+        }
+
+        this._editProductOdataV2Dialog.close();
+      },
+
       onCreateODataV2Record() {
-        if (!this._validateFieldGroup()) {
+        const controls = this._addNewProductOdataV2Dialog.getControlsByFieldGroupId("odatav2ProductForm");
+        if (!this._validateFieldGroup(controls)) {
           return;
         }
 
         this._v2Model.submitChanges({
           success: (data) => {
             MessageToast.show(this._resourceBundle.getText("createODataV2RecordDialogSuccessMessage"));
-            this._addEditNewProductOdataV2Dialog.close();
+            this._addNewProductOdataV2Dialog.close();
             this._newOdataV2ProductContext = null;
-            this._editingOdataV2ProductPath = null;
           },
           error: () => MessageBox.error(this._resourceBundle.getText("createODataV2RecordDialogCrationFailedMessage")),
         });
@@ -292,27 +333,19 @@ sap.ui.define(
           this._newOdataV2ProductContext = null;
         }
 
-        if (this._editingOdataV2ProductPath) {
-          this._v2Model.resetChanges([this._editingOdataV2ProductPath]);
-          this._editingOdataV2ProductPath = null;
-        }
-
-        this._addEditNewProductOdataV2Dialog.close();
+        this._addNewProductOdataV2Dialog.close();
       },
 
-      _validateFieldGroup() {
-        const controls = this._addEditNewProductOdataV2Dialog.getControlsByFieldGroupId("odatav2ProductForm");
-
+      _validateFieldGroup(controls) {
         const results = controls.map((control) => {
           const value = control.getBinding("value")?.getValue();
           let isValid = true;
-
           if (control.isA("sap.m.Input") && control.getBinding("value") && control.getRequired()) {
             const localId = this.getView().getLocalId(control.getId());
-            if (localId === "odatav2ReleaseRating") {
+            if (control.getName() === "ReleaseRating") {
               const numValue = Number(value);
               isValid = value != null && numValue >= 0 && numValue <= 5;
-            } else if (localId === "odatav2PriceInput") {
+            } else if (control.getName() === "Price") {
               const numValue = Number(value);
               isValid = value != null && numValue >= 0;
             } else {
