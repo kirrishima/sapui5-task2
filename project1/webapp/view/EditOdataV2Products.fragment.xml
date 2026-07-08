@@ -11,7 +11,7 @@
                 <VBox class="sapUiSmallMarginBottom">
                     <Label text="{i18n>createODataV2RecordDialogLabelId}"
                         labelFor="odatav2EditIdInput" required="true" />
-                    <Input id="odatav2EditIdInput" fieldGroupIds="odatav2EditProductForm" required="true"
+                    <Input id="odatav2EditIdInput" fieldGroupIds="odatav2EditProductForm" required="true" name="Id"
                         value="{
                             path: 'ui>/tabs/odatav2/EditedProduct/ID',
                             type: 'sap.ui.model.odata.type.Int32'
@@ -59,7 +59,7 @@
                         labelFor="odatav2EditReleaseRating" required="true" />
                     <Input id="odatav2EditReleaseRating" fieldGroupIds="odatav2EditProductForm"
                         valueStateText="{i18n>createODataV2RecordDialogInputRatingRangeError}"
-                        required="true"
+                        required="true" name="ReleaseRating"
                         value="{
                             path: 'ui>/tabs/odatav2/EditedProduct/Rating',
                             type: 'sap.ui.model.odata.type.Int32'
@@ -70,7 +70,7 @@
                         labelFor="odatav2EditPriceInput" required="true" />
                     <Input id="odatav2EditPriceInput" fieldGroupIds="odatav2EditProductForm"
                         valueStateText="{i18n>createODataV2RecordDialogInputPriceRangeError}"
-                        required="true"
+                        required="true" name="Price"
                         value="{
                             path: 'ui>/tabs/odatav2/EditedProduct/Price',
                             type: 'sap.ui.model.odata.type.Decimal'

@@ -59,7 +59,7 @@
                         labelFor="odatav2ReleaseRating" required="true" />
                     <Input id="odatav2ReleaseRating" fieldGroupIds="odatav2ProductForm"
                         valueStateText="{i18n>createODataV2RecordDialogInputRatingRangeError}"
-                        required="true"
+                        required="true" name="ReleaseRating"
                         value="{
                             path: 'v2Model>Rating',
                             type: 'sap.ui.model.odata.type.Int32'
@@ -69,8 +69,7 @@
                     <Label text="{i18n>createODataV2RecordDialogLabelPrice}"
                         labelFor="odatav2PriceInput" required="true" />
                     <Input id="odatav2PriceInput" fieldGroupIds="odatav2ProductForm"
-                        valueStateText="{i18n>createODataV2RecordDialogInputPriceRangeError}"
-                        required="true"
+                        valueStateText="{i18n>createODataV2RecordDialogInputPriceRangeError}" required="true" name="Price"
                         value="{
                             path: 'v2Model>Price',
                             type: 'sap.ui.model.odata.type.Decimal'

@@ -262,17 +262,7 @@ sap.ui.define(
 
       async onEditRecordOdataV2(event) {
         const context = event.getSource().getBindingContext("v2Model");
-
-        const { ID, Name, Description, ReleaseDate, DiscontinuedDate, Rating, Price } = context.getObject();
-        this._uiModel.setProperty("/tabs/odatav2/EditedProduct", {
-          ID,
-          Name,
-          Description,
-          ReleaseDate,
-          DiscontinuedDate,
-          Rating,
-          Price,
-        });
+        this._uiModel.setProperty("/tabs/odatav2/EditedProduct", context.getObject());
 
         if (!this._editProductOdataV2Dialog) {
           this._editProductOdataV2Dialog = await this.loadFragment({
@@ -291,14 +281,8 @@ sap.ui.define(
       },
 
       onEditProductOdataV2Confirm() {
-        if (
-          !this._validateFieldGroup(
-            this._editProductOdataV2Dialog,
-            "odatav2EditProductForm",
-            "odatav2EditReleaseRating",
-            "odatav2EditPriceInput",
-          )
-        ) {
+        const controls = this._editProductOdataV2Dialog.getControlsByFieldGroupId("odatav2EditProductForm");
+        if (!this._validateFieldGroup(controls)) {
           return;
         }
 
@@ -328,14 +312,8 @@ sap.ui.define(
       },
 
       onCreateODataV2Record() {
-        if (
-          !this._validateFieldGroup(
-            this._addNewProductOdataV2Dialog,
-            "odatav2ProductForm",
-            "odatav2ReleaseRating",
-            "odatav2PriceInput",
-          )
-        ) {
+        const controls = this._addNewProductOdataV2Dialog.getControlsByFieldGroupId("odatav2ProductForm");
+        if (!this._validateFieldGroup(controls)) {
           return;
         }
 
@@ -358,19 +336,16 @@ sap.ui.define(
         this._addNewProductOdataV2Dialog.close();
       },
 
-      _validateFieldGroup(dialog, fieldGroupId, releaseRatingId, priceInputID) {
-        const controls = dialog.getControlsByFieldGroupId(fieldGroupId);
-
+      _validateFieldGroup(controls) {
         const results = controls.map((control) => {
           const value = control.getBinding("value")?.getValue();
           let isValid = true;
-
           if (control.isA("sap.m.Input") && control.getBinding("value") && control.getRequired()) {
             const localId = this.getView().getLocalId(control.getId());
-            if (localId === releaseRatingId) {
+            if (control.getName() === "ReleaseRating") {
               const numValue = Number(value);
               isValid = value != null && numValue >= 0 && numValue <= 5;
-            } else if (localId === priceInputID) {
+            } else if (control.getName() === "Price") {
               const numValue = Number(value);
               isValid = value != null && numValue >= 0;
             } else {
