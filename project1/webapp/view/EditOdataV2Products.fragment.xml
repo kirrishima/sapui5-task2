@@ -3,88 +3,88 @@
     xmlns:core="sap.ui.core"
     xmlns:l="sap.ui.layout">
     <Dialog
-        id="odataV2AddNewProductsDialog"
+        id="odataV2EditProductsDialog"
         type="Message"
-        title="{i18n>createODataV2RecordDialogTitle}">
+        title="{i18n>editODataV2RecordDialogTitle}">
         <content>
             <l:VerticalLayout width="100%">
                 <VBox class="sapUiSmallMarginBottom">
                     <Label text="{i18n>createODataV2RecordDialogLabelId}"
-                        labelFor="odatav2IdInput" required="true" />
-                    <Input id="odatav2IdInput" fieldGroupIds="odatav2ProductForm" required="true"
+                        labelFor="odatav2EditIdInput" required="true" />
+                    <Input id="odatav2EditIdInput" fieldGroupIds="odatav2EditProductForm" required="true"
                         value="{
-                            path: 'v2Model>ID',
+                            path: 'ui>/tabs/odatav2/EditedProduct/ID',
                             type: 'sap.ui.model.odata.type.Int32'
                         }" />
                 </VBox>
                 <VBox class="sapUiSmallMarginBottom">
                     <Label text="{i18n>createODataV2RecordDialogLabelName}"
-                        labelFor="odatav2NameInput" required="true" />
-                    <Input id="odatav2NameInput" fieldGroupIds="odatav2ProductForm" required="true"
+                        labelFor="odatav2EditNameInput" required="true" />
+                    <Input id="odatav2EditNameInput" fieldGroupIds="odatav2EditProductForm" required="true"
                         value="{
-                            path: 'v2Model>Name',
+                            path: 'ui>/tabs/odatav2/EditedProduct/Name',
                             type: 'sap.ui.model.odata.type.String'
                         }" />
                 </VBox>
                 <VBox class="sapUiSmallMarginBottom">
                     <Label text="{i18n>createODataV2RecordDialogLabelDescription}"
-                        labelFor="odatav2DescriptionInput" />
-                    <Input id="odatav2DescriptionInput" fieldGroupIds="odatav2ProductForm"
+                        labelFor="odatav2EditDescriptionInput" />
+                    <Input id="odatav2EditDescriptionInput" fieldGroupIds="odatav2EditProductForm"
                         value="{
-                            path: 'v2Model>Description',
+                            path: 'ui>/tabs/odatav2/EditedProduct/Description',
                             type: 'sap.ui.model.odata.type.String'
                         }" />
                 </VBox>
                 <VBox class="sapUiSmallMarginBottom">
                     <Label text="{i18n>createODataV2RecordDialogLabelReleaseDate}"
-                        labelFor="odatav2ReleaseDateInput" required="true" />
-                    <DatePicker id="odatav2ReleaseDateInput" fieldGroupIds="odatav2ProductForm"
+                        labelFor="odatav2EditReleaseDateInput" required="true" />
+                    <DatePicker id="odatav2EditReleaseDateInput" fieldGroupIds="odatav2EditProductForm"
                         required="true"
                         value="{
-                            path: 'v2Model>ReleaseDate',
+                            path: 'ui>/tabs/odatav2/EditedProduct/ReleaseDate',
                             type: 'sap.ui.model.odata.type.DateTime'
                         }" />
                 </VBox>
                 <VBox class="sapUiSmallMarginBottom">
                     <Label text="{i18n>createODataV2RecordDialogLabelDiscontinuedDate}"
-                        labelFor="odatav2DiscontinuedDateInput" />
-                    <DatePicker id="odatav2DiscontinuedDateInput" fieldGroupIds="odatav2ProductForm"
+                        labelFor="odatav2EditDiscontinuedDateInput" />
+                    <DatePicker id="odatav2EditDiscontinuedDateInput" fieldGroupIds="odatav2EditProductForm"
                         value="{
-                            path: 'v2Model>DiscontinuedDate',
+                            path: 'ui>/tabs/odatav2/EditedProduct/DiscontinuedDate',
                             type: 'sap.ui.model.odata.type.DateTime'
                         }" />
                 </VBox>
                 <VBox class="sapUiSmallMarginBottom">
                     <Label text="{i18n>createODataV2RecordDialogLabelRating}"
-                        labelFor="odatav2ReleaseRating" required="true" />
-                    <Input id="odatav2ReleaseRating" fieldGroupIds="odatav2ProductForm"
+                        labelFor="odatav2EditReleaseRating" required="true" />
+                    <Input id="odatav2EditReleaseRating" fieldGroupIds="odatav2EditProductForm"
                         valueStateText="{i18n>createODataV2RecordDialogInputRatingRangeError}"
                         required="true"
                         value="{
-                            path: 'v2Model>Rating',
+                            path: 'ui>/tabs/odatav2/EditedProduct/Rating',
                             type: 'sap.ui.model.odata.type.Int32'
                         }" />
                 </VBox>
                 <VBox class="sapUiSmallMarginBottom">
                     <Label text="{i18n>createODataV2RecordDialogLabelPrice}"
-                        labelFor="odatav2PriceInput" required="true" />
-                    <Input id="odatav2PriceInput" fieldGroupIds="odatav2ProductForm"
+                        labelFor="odatav2EditPriceInput" required="true" />
+                    <Input id="odatav2EditPriceInput" fieldGroupIds="odatav2EditProductForm"
                         valueStateText="{i18n>createODataV2RecordDialogInputPriceRangeError}"
                         required="true"
                         value="{
-                            path: 'v2Model>Price',
+                            path: 'ui>/tabs/odatav2/EditedProduct/Price',
                             type: 'sap.ui.model.odata.type.Decimal'
                         }" />
                 </VBox>
             </l:VerticalLayout>
         </content>
         <beginButton>
-            <Button type="Emphasized" text="{i18n>createODataV2RecordDialogButtonCreate}"
-                press=".onCreateODataV2Record" />
+            <Button id="odatav2EditConfirmButton" type="Emphasized" text="{i18n>createODataV2RecordDialogButtonCreate}"
+                press=".onEditProductOdataV2Confirm" />
         </beginButton>
         <endButton>
-            <Button text="{i18n>createODataV2RecordDialogButtonCancel}"
-                press=".onCancelODataV2RecordCreation" />
+            <Button id="odatav2EditCancelButton" text="{i18n>createODataV2RecordDialogButtonCancel}"
+                press=".onEditProductOdataV2Cancel" />
         </endButton>
     </Dialog>
 </core:FragmentDefinition>
