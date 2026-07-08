@@ -3,7 +3,7 @@
     xmlns="sap.m" xmlns:core="sap.ui.core"
     core:require="{formatter: 'project1/model/formatter'}">
     <Page id="page" title="{i18n>title}">
-        <IconTabBar id="iconTabBar" expanded="{device>/isNoPhone}">
+        <IconTabBar id="iconTabBar" expanded="{device>/isNoPhone}" selectedKey="{ui>/selectedTab}" select=".onTabSelect">
             <items>
                 <IconTabFilter text="{i18n>iconTabFilterJsonModelText}" key="jsonmodel">
                     <content>

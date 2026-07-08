@@ -45,6 +45,7 @@ sap.ui.define(
         this._resourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
 
         const uiModel = new JSONModel({
+          selectedTab: "jsonmodel",
           tabs: {
             json: { deleteEnabled: false },
             odatav2: {
@@ -66,6 +67,26 @@ sap.ui.define(
 
         view?.setModel(uiModel, "ui");
         this._uiModel = uiModel;
+
+        const router = this.getOwnerComponent().getRouter();
+        router.getRoute("RouteTab").attachMatched(this._onTabRouteMatched, this);
+      },
+
+      onTabSelect(event) {
+        const tabKey = event.getParameter("key");
+        this.getOwnerComponent().getRouter().navTo("RouteTab", { tabKey });
+      },
+
+      _onTabRouteMatched(event) {
+        const tabKey = event.getParameter("arguments").tabKey;
+        const allowedKeys = ["jsonmodel", "odatav2", "odatav4"];
+
+        if (!allowedKeys.includes(tabKey)) {
+          this.getOwnerComponent().getRouter().navTo("RouteTab", { tabKey: "jsonmodel" }, true);
+          return;
+        }
+
+        this._uiModel.setProperty("/selectedTab", tabKey);
       },
 
       async onAddRecord() {
