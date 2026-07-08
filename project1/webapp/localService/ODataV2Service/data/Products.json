@@ -6,7 +6,8 @@
     "ReleaseDate": "2022-06-15T00:00:00",
     "DiscontinuedDate": null,
     "Rating": 5,
-    "Price": 74.99
+    "Price": 74.99,
+    "SupplierID": 1
   },
   {
     "ID": 2,
@@ -15,7 +16,8 @@
     "ReleaseDate": "2025-05-22T00:00:00",
     "DiscontinuedDate": null,
     "Rating": 5,
-    "Price": 84.99
+    "Price": 84.99,
+    "SupplierID": 2
   },
   {
     "ID": 3,
@@ -24,7 +26,8 @@
     "ReleaseDate": "2020-07-15T00:00:00",
     "DiscontinuedDate": null,
     "Rating": 5,
-    "Price": 64.99
+    "Price": 64.99,
+    "SupplierID": 3
   },
   {
     "ID": 4,
@@ -33,7 +36,8 @@
     "ReleaseDate": "2020-05-01T00:00:00",
     "DiscontinuedDate": null,
     "Rating": 5,
-    "Price": 49.99
+    "Price": 49.99,
+    "SupplierID": 4
   },
   {
     "ID": 5,
@@ -42,7 +46,8 @@
     "ReleaseDate": "2018-12-01T00:00:00",
     "DiscontinuedDate": null,
     "Rating": 4,
-    "Price": 39.99
+    "Price": 39.99,
+    "SupplierID": 5
   },
   {
     "ID": 6,
@@ -51,7 +56,8 @@
     "ReleaseDate": "2024-01-15T00:00:00",
     "DiscontinuedDate": null,
     "Rating": 4,
-    "Price": 74.99
+    "Price": 74.99,
+    "SupplierID": 1
   },
   {
     "ID": 7,
@@ -60,7 +66,8 @@
     "ReleaseDate": "2023-01-01T00:00:00",
     "DiscontinuedDate": null,
     "Rating": 4,
-    "Price": 49.99
+    "Price": 49.99,
+    "SupplierID": 2
   },
   {
     "ID": 8,
@@ -69,7 +76,8 @@
     "ReleaseDate": "2024-09-01T00:00:00",
     "DiscontinuedDate": null,
     "Rating": 5,
-    "Price": 84.99
+    "Price": 84.99,
+    "SupplierID": 3
   },
   {
     "ID": 9,
@@ -78,7 +86,8 @@
     "ReleaseDate": "2021-02-15T00:00:00",
     "DiscontinuedDate": "2024-12-31T00:00:00",
     "Rating": 4,
-    "Price": 24.99
+    "Price": 24.99,
+    "SupplierID": 4
   },
   {
     "ID": 10,
@@ -87,7 +96,8 @@
     "ReleaseDate": "2012-11-15T00:00:00",
     "DiscontinuedDate": null,
     "Rating": 4,
-    "Price": 44.99
+    "Price": 44.99,
+    "SupplierID": 5
   },
   {
     "ID": 11,
@@ -96,7 +106,8 @@
     "ReleaseDate": "2024-05-01T00:00:00",
     "DiscontinuedDate": null,
     "Rating": 4,
-    "Price": 84.99
+    "Price": 84.99,
+    "SupplierID": 1
   },
   {
     "ID": 12,
@@ -105,7 +116,8 @@
     "ReleaseDate": "2008-05-01T00:00:00",
     "DiscontinuedDate": null,
     "Rating": 4,
-    "Price": 29.99
+    "Price": 29.99,
+    "SupplierID": 2
   },
   {
     "ID": 13,
@@ -114,7 +126,8 @@
     "ReleaseDate": "2024-01-01T00:00:00",
     "DiscontinuedDate": null,
     "Rating": 3,
-    "Price": 39.99
+    "Price": 39.99,
+    "SupplierID": 3
   },
   {
     "ID": 14,
@@ -123,7 +136,8 @@
     "ReleaseDate": "2023-02-01T00:00:00",
     "DiscontinuedDate": "2025-01-15T00:00:00",
     "Rating": 3,
-    "Price": 24.99
+    "Price": 24.99,
+    "SupplierID": 4
   },
   {
     "ID": 15,
@@ -132,7 +146,8 @@
     "ReleaseDate": "2012-08-15T00:00:00",
     "DiscontinuedDate": null,
     "Rating": 4,
-    "Price": 29.99
+    "Price": 29.99,
+    "SupplierID": 5
   },
   {
     "ID": 16,
@@ -141,7 +156,8 @@
     "ReleaseDate": "2020-12-15T00:00:00",
     "DiscontinuedDate": null,
     "Rating": 5,
-    "Price": 84.99
+    "Price": 84.99,
+    "SupplierID": 1
   },
   {
     "ID": 17,
@@ -150,7 +166,8 @@
     "ReleaseDate": "2016-06-01T00:00:00",
     "DiscontinuedDate": null,
     "Rating": 4,
-    "Price": 34.99
+    "Price": 34.99,
+    "SupplierID": 2
   },
   {
     "ID": 18,
@@ -159,7 +176,8 @@
     "ReleaseDate": "2024-11-01T00:00:00",
     "DiscontinuedDate": null,
     "Rating": 4,
-    "Price": 74.99
+    "Price": 74.99,
+    "SupplierID": 3
   },
   {
     "ID": 19,
@@ -168,7 +186,8 @@
     "ReleaseDate": "2015-06-01T00:00:00",
     "DiscontinuedDate": null,
     "Rating": 4,
-    "Price": 39.99
+    "Price": 39.99,
+    "SupplierID": 4
   },
   {
     "ID": 20,
@@ -177,7 +196,8 @@
     "ReleaseDate": "2020-10-01T00:00:00",
     "DiscontinuedDate": null,
     "Rating": 4,
-    "Price": 84.99
+    "Price": 84.99,
+    "SupplierID": 5
   },
   {
     "ID": 21,
@@ -186,7 +206,8 @@
     "ReleaseDate": "2013-05-01T00:00:00",
     "DiscontinuedDate": "2022-12-31T00:00:00",
     "Rating": 3,
-    "Price": 14.99
+    "Price": 14.99,
+    "SupplierID": 1
   },
   {
     "ID": 22,
@@ -195,7 +216,8 @@
     "ReleaseDate": "2016-08-15T00:00:00",
     "DiscontinuedDate": null,
     "Rating": 4,
-    "Price": 29.99
+    "Price": 29.99,
+    "SupplierID": 2
   },
   {
     "ID": 23,
@@ -204,7 +226,8 @@
     "ReleaseDate": "2023-06-01T00:00:00",
     "DiscontinuedDate": "2025-02-01T00:00:00",
     "Rating": 3,
-    "Price": 19.99
+    "Price": 19.99,
+    "SupplierID": 3
   },
   {
     "ID": 24,
@@ -213,7 +236,8 @@
     "ReleaseDate": "2014-03-15T00:00:00",
     "DiscontinuedDate": null,
     "Rating": 4,
-    "Price": 34.99
+    "Price": 34.99,
+    "SupplierID": 4
   },
   {
     "ID": 25,
@@ -222,6 +246,7 @@
     "ReleaseDate": "2024-03-01T00:00:00",
     "DiscontinuedDate": null,
     "Rating": 4,
-    "Price": 29.99
+    "Price": 29.99,
+    "SupplierID": 5
   }
 ]
