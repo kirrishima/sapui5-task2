@@ -150,7 +150,7 @@
                                 </Column>
                             </columns>
                             <items>
-                                <ColumnListItem>
+                                <ColumnListItem type="Navigation" press=".onNavToProducts">
                                     <cells>
                                         <Text text="{v2Model>ID}"></Text>
                                         <Text text="{v2Model>Name}"></Text>

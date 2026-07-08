@@ -89,6 +89,16 @@ sap.ui.define(
         this._uiModel.setProperty("/selectedTab", tabKey);
       },
 
+      onNavToProducts(event) {
+        const id = event.getSource()?.getBindingContext("v2Model")?.getProperty("ID");
+
+        if (id == null) {
+          return;
+        }
+
+        this.getOwnerComponent().getRouter().navTo("RouteProduct", { ProductID: id }, true);
+      },
+
       async onAddRecord() {
         const idNumbers = this._viewModel.getProperty("/Books").map((book) => {
           const num = parseInt(book.ID?.replace("ID", "") ?? "0", 10);

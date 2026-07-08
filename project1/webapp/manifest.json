@@ -116,6 +116,11 @@
           ]
         },
         {
+          "name": "RouteProduct",
+          "pattern": "Product/{ProductID}",
+          "target": "TargetProduct"
+        },
+        {
           "name": "RouteMain",
           "pattern": ":?query:",
           "target": [
@@ -127,6 +132,10 @@
         "TargetMain": {
           "id": "Main",
           "name": "Main"
+        },
+        "TargetProduct": {
+          "id": "Product",
+          "name": "Product"
         }
       }
     },
