@@ -17,10 +17,30 @@ sap.ui.define(
             },
             error: () => {
               reject();
-              MessageBox.error(this._v2ModelresourceBundle.getText("ODataDeleteError"));
+              MessageBox.error(this._resourceBundle.getText("ODataDeleteError"));
             },
           });
         });
+      },
+
+      async deleteContextsV4(contexts) {
+        if (!contexts || contexts.length === 0) {
+          return Promise.resolve();
+        }
+
+        const deletionPromises = contexts.map((context) => context.delete());
+
+        try {
+          await Promise.all(deletionPromises);
+          MessageToast.show(this._resourceBundle.getText("ODataDeleteSuccess"));
+        } catch (error) {
+          MessageBox.error(this._resourceBundle.getText("ODataDeleteError"));
+          throw error;
+        }
+      },
+
+      updateActionEnablement(table, model, modelPath) {
+        model.setProperty(modelPath, !!table.getSelectedItems().length);
       },
     });
   },
