@@ -43,7 +43,13 @@ sap.ui.define(
 
         this._v2Model = this.getOwnerComponent().getModel("v2Model");
         this._resourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
+        this._uiModel = this._setupUIModel();
 
+        this._router = this.getOwnerComponent().getRouter();
+        this._router.getRoute("RouteTab").attachMatched(this._onTabRouteMatched, this);
+      },
+
+      _setupUIModel() {
         const uiModel = new JSONModel({
           selectedTab: "jsonmodel",
           tabs: {
@@ -65,16 +71,13 @@ sap.ui.define(
           },
         });
 
-        view?.setModel(uiModel, "ui");
-        this._uiModel = uiModel;
-
-        const router = this.getOwnerComponent().getRouter();
-        router.getRoute("RouteTab").attachMatched(this._onTabRouteMatched, this);
+        this.getView().setModel(uiModel, "ui");
+        return uiModel;
       },
 
       onTabSelect(event) {
         const tabKey = event.getParameter("key");
-        this.getOwnerComponent().getRouter().navTo("RouteTab", { tabKey });
+        this._router.navTo("RouteTab", { tabKey });
       },
 
       _onTabRouteMatched(event) {
@@ -82,7 +85,7 @@ sap.ui.define(
         const allowedKeys = ["jsonmodel", "odatav2", "odatav4"];
 
         if (!allowedKeys.includes(tabKey)) {
-          this.getOwnerComponent().getRouter().navTo("RouteTab", { tabKey: "jsonmodel" }, true);
+          this._router.navTo("RouteTab", { tabKey: "jsonmodel" }, true);
           return;
         }
 
@@ -96,7 +99,7 @@ sap.ui.define(
           return;
         }
 
-        this.getOwnerComponent().getRouter().navTo("RouteProduct", { ProductID: id }, true);
+        this._router.navTo("RouteProduct", { ProductID: id }, true);
       },
 
       async onAddRecord() {

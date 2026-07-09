@@ -4,7 +4,7 @@
     <Page title="{i18n>ProductViewPageTitle}">
         <uxap:ObjectPageLayout >
             <uxap:headerTitle>
-                <uxap:ObjectPageHeader objectTitle="{view>/Name}"></uxap:ObjectPageHeader>
+                <uxap:ObjectPageHeader objectTitle="{v2Model>Name}"></uxap:ObjectPageHeader>
             </uxap:headerTitle>
             <uxap:sections>
                 <uxap:ObjectPageSection title="{i18n>ProductViewProductSectionTitle}">
@@ -13,21 +13,21 @@
                             <f:SimpleForm layout="ResponsiveGridLayout">
                                 <f:content>
                                     <Label text="{i18n>ProductViewProductLabelId}" />
-                                    <Text text="{view>/ID}" />
+                                    <Text text="{v2Model>ID}" />
                                     <Label text="{i18n>ProductViewProductLabelName}" />
-                                    <Text text="{view>/Name}" />
+                                    <Text text="{v2Model>Name}" />
                                     <Label text="{i18n>ProductViewProductLabelDescription}" />
-                                    <Text text="{view>/Description}" />
+                                    <Text text="{v2Model>Description}" />
                                     <Label text="{i18n>ProductViewProductLabelReleaseDate}" />
-                                    <Text text="{view>/ReleaseDate}" />
+                                    <Text text="{v2Model>ReleaseDate}" />
                                     <Label text="{i18n>ProductViewProductLabelDiscontinuedDate}" />
-                                    <Text text="{view>/DiscontinuedDate}" />
+                                    <Text text="{v2Model>DiscontinuedDate}" />
                                     <Label text="{i18n>ProductViewProductLabelRating}" />
-                                    <Text text="{view>/Rating}" />
+                                    <Text text="{v2Model>Rating}" />
                                     <Label text="{i18n>ProductViewProductLabelPrice}" />
-                                    <Text text="{view>/Price}" />
+                                    <Text text="{v2Model>Price}" />
                                     <Label text="{i18n>ProductViewProductLabelSupplierID}" />
-                                    <Text text="{view>/SupplierID}" />
+                                    <Text text="{v2Model>SupplierID}" />
                                 </f:content>
                             </f:SimpleForm>
                         </uxap:ObjectPageSubSection>
@@ -39,21 +39,21 @@
                             <f:SimpleForm layout="ResponsiveGridLayout">
                                 <f:content>
                                     <Label text="{i18n>ProductViewSupplierLabelId}" />
-                                    <Text text="{view>/Supplier/ID}" />
+                                    <Text text="{v2Model>Supplier/ID}" />
                                     <Label text="{i18n>ProductViewSupplierLabelName}" />
-                                    <Text text="{view>/Supplier/Name}" />
+                                    <Text text="{v2Model>Supplier/Name}" />
                                     <Label text="{i18n>ProductViewSupplierLabelStreet}" />
-                                    <Text text="{view>/Supplier/Address/Street}" />
+                                    <Text text="{v2Model>Supplier/Address/Street}" />
                                     <Label text="{i18n>ProductViewSupplierLabelCity}" />
-                                    <Text text="{view>/Supplier/Address/City}" />
+                                    <Text text="{v2Model>Supplier/Address/City}" />
                                     <Label text="{i18n>ProductViewSupplierLabelState}" />
-                                    <Text text="{view>/Supplier/Address/State}" />
+                                    <Text text="{v2Model>Supplier/Address/State}" />
                                     <Label text="{i18n>ProductViewSupplierLabelZipCode}" />
-                                    <Text text="{view>/Supplier/Address/ZipCode}" />
+                                    <Text text="{v2Model>Supplier/Address/ZipCode}" />
                                     <Label text="{i18n>ProductViewSupplierLabelCountry}" />
-                                    <Text text="{view>/Supplier/Address/Country}" />
+                                    <Text text="{v2Model>Supplier/Address/Country}" />
                                     <Label text="{i18n>ProductViewSupplierLabelConcurrency}" />
-                                    <Text text="{view>/Supplier/Concurrency}" />
+                                    <Text text="{v2Model>Supplier/Concurrency}" />
                                 </f:content>
                             </f:SimpleForm>
                         </uxap:ObjectPageSubSection>

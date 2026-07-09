@@ -11,30 +11,18 @@ sap.ui.define(["./BaseController", "sap/ui/model/json/JSONModel"], (BaseControll
       this.getOwnerComponent().getRouter().getRoute("RouteProduct").attachMatched(this._onProductRouteMatched, this);
     },
 
-    async _onProductRouteMatched(event) {
+    _onProductRouteMatched(event) {
       const productID = event.getParameter("arguments").ProductID;
 
       if (productID == null) {
         return;
       }
 
-      await this._v2Model.metadataLoaded();
-
       const productPath = this._v2Model.createKey("/Products", {
         ID: Number(productID),
       });
 
-      this._v2Model.read(productPath, {
-        urlParameters: {
-          $expand: "Supplier",
-        },
-        success: (product) => {
-          this._viewModel.setData(product);
-        },
-        error: () => {
-          this._viewModel.setData({});
-        },
-      });
+      this.getView().bindElement({ path: productPath, model: "v2Model", parameters: { expand: "Supplier" } });
     },
   });
 });
