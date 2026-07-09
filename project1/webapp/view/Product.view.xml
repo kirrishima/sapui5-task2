@@ -1,5 +1,65 @@
-<mvc:View  controllerName="project1.controller.Product"
+<mvc:View xmlns:uxap="sap.uxap"  controllerName="project1.controller.Product"
     xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m" xmlns:core="sap.ui.core" >
-    <Page title="{i18n>ProductViewPageTitle}"></Page>
+    xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form">
+    <Page title="{i18n>ProductViewPageTitle}">
+        <uxap:ObjectPageLayout >
+            <uxap:headerTitle>
+                <uxap:ObjectPageHeader objectTitle="{v2Model>Name}"></uxap:ObjectPageHeader>
+            </uxap:headerTitle>
+            <uxap:sections>
+                <uxap:ObjectPageSection title="{i18n>ProductViewProductSectionTitle}">
+                    <uxap:subSections>
+                        <uxap:ObjectPageSubSection >
+                            <f:SimpleForm layout="ResponsiveGridLayout">
+                                <f:content>
+                                    <Label text="{i18n>ProductViewProductLabelId}" />
+                                    <Text text="{v2Model>ID}" />
+                                    <Label text="{i18n>ProductViewProductLabelName}" />
+                                    <Text text="{v2Model>Name}" />
+                                    <Label text="{i18n>ProductViewProductLabelDescription}" />
+                                    <Text text="{v2Model>Description}" />
+                                    <Label text="{i18n>ProductViewProductLabelReleaseDate}" />
+                                    <Text text="{v2Model>ReleaseDate}" />
+                                    <Label text="{i18n>ProductViewProductLabelDiscontinuedDate}" />
+                                    <Text text="{v2Model>DiscontinuedDate}" />
+                                    <Label text="{i18n>ProductViewProductLabelRating}" />
+                                    <Text text="{v2Model>Rating}" />
+                                    <Label text="{i18n>ProductViewProductLabelPrice}" />
+                                    <Text text="{v2Model>Price}" />
+                                    <Label text="{i18n>ProductViewProductLabelSupplierID}" />
+                                    <Text text="{v2Model>SupplierID}" />
+                                </f:content>
+                            </f:SimpleForm>
+                        </uxap:ObjectPageSubSection>
+                    </uxap:subSections>
+                </uxap:ObjectPageSection>
+                <uxap:ObjectPageSection title="{i18n>ProductViewSupplierSectionTitle}">
+                    <uxap:subSections>
+                        <uxap:ObjectPageSubSection >
+                            <f:SimpleForm layout="ResponsiveGridLayout">
+                                <f:content>
+                                    <Label text="{i18n>ProductViewSupplierLabelId}" />
+                                    <Text text="{v2Model>Supplier/ID}" />
+                                    <Label text="{i18n>ProductViewSupplierLabelName}" />
+                                    <Text text="{v2Model>Supplier/Name}" />
+                                    <Label text="{i18n>ProductViewSupplierLabelStreet}" />
+                                    <Text text="{v2Model>Supplier/Address/Street}" />
+                                    <Label text="{i18n>ProductViewSupplierLabelCity}" />
+                                    <Text text="{v2Model>Supplier/Address/City}" />
+                                    <Label text="{i18n>ProductViewSupplierLabelState}" />
+                                    <Text text="{v2Model>Supplier/Address/State}" />
+                                    <Label text="{i18n>ProductViewSupplierLabelZipCode}" />
+                                    <Text text="{v2Model>Supplier/Address/ZipCode}" />
+                                    <Label text="{i18n>ProductViewSupplierLabelCountry}" />
+                                    <Text text="{v2Model>Supplier/Address/Country}" />
+                                    <Label text="{i18n>ProductViewSupplierLabelConcurrency}" />
+                                    <Text text="{v2Model>Supplier/Concurrency}" />
+                                </f:content>
+                            </f:SimpleForm>
+                        </uxap:ObjectPageSubSection>
+                    </uxap:subSections>
+                </uxap:ObjectPageSection>
+            </uxap:sections>
+        </uxap:ObjectPageLayout>
+    </Page>
 </mvc:View>
