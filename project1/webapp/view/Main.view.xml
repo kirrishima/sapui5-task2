@@ -3,16 +3,13 @@
     xmlns="sap.m" xmlns:core="sap.ui.core"
     core:require="{formatter: 'project1/model/formatter'}">
     <Page id="page" title="{i18n>title}">
-        <IconTabBar id="iconTabBar" expanded="{device>/isNoPhone}" selectedKey="{ui>/selectedTab}" select=".onTabSelect">
+        <IconTabBar id="iconTabBar" expanded="{device>/isNoPhone}" selectedKey="{ui>/selectedTab}"
+            select=".onTabSelect">
             <items>
                 <IconTabFilter text="{i18n>iconTabFilterJsonModelText}" key="jsonmodel">
                     <content>
                         <Table id="booksTable" mode="MultiSelect" items="{view>/Books}"
-                            selectionChange=".onAnyTableSelectionChange">
-                            <customData>
-                                <core:CustomData key="deleteEnabledPath"
-                                    value="/tabs/json/deleteEnabled" />
-                            </customData>
+                            selectionChange=".onJsonModelTableSelectionChange">
                             <headerToolbar>
                                 <Toolbar>
                                     <ToolbarSpacer />
@@ -102,16 +99,17 @@
                 <IconTabFilter text="{i18n>iconTabFilterOData2Text}" key="odatav2">
                     <content>
                         <Table id="productsV2Table" items="{v2Model>/Products}" mode="MultiSelect"
-                            rememberSelections="false" selectionChange=".onAnyTableSelectionChange">
-                            <customData>
-                                <core:CustomData key="deleteEnabledPath"
-                                    value="/tabs/odatav2/deleteEnabled" />
-                            </customData>
+                            rememberSelections="false" selectionChange=".onODataV2SelectionChange">
                             <headerToolbar>
                                 <Toolbar>
                                     <content>
-                                        <Input placeholder="{i18n>odatav2TableNameSerachInputPlaceholder}" liveChange=".onOdataV2Search"></Input>
-                                        <ComboBox placeholder="{i18n>odatav2TableSortComboBoxPlaceholder}" selectionChange=".onOdataV2Sort" items="{ui>/tabs/odatav2/sortableColumns}">
+                                        <Input
+                                            placeholder="{i18n>odatav2TableNameSerachInputPlaceholder}"
+                                            liveChange=".onOdataV2Search"></Input>
+                                        <ComboBox
+                                            placeholder="{i18n>odatav2TableSortComboBoxPlaceholder}"
+                                            selectionChange=".onOdataV2Sort"
+                                            items="{ui>/tabs/odatav2/sortableColumns}">
                                             <core:Item key="{ui>key}" text="{ui>text}" />
                                         </ComboBox>
                                         <ToolbarSpacer />
@@ -160,7 +158,8 @@
                                         <Text text="{v2Model>Rating}"></Text>
                                         <Text text="{v2Model>Price}"></Text>
                                         <HBox>
-                                            <Button text="{i18n>ODataV2EditButton}" press=".onEditRecordOdataV2"></Button>
+                                            <Button text="{i18n>ODataV2EditButton}"
+                                                press=".onEditRecordOdataV2"></Button>
                                         </HBox>
                                     </cells>
                                 </ColumnListItem>
@@ -170,15 +169,26 @@
                 </IconTabFilter>
                 <IconTabFilter text="{i18n>iconTabFilterOData4Text}" key="odatav4">
                     <content>
-                        <Table items="{v4Model>/Products}">
+                        <Table items="{v4Model>/Products}" id="productsV4Table" mode="MultiSelect"
+                            selectionChange=".onODataV4SelectionChange">
+                            <headerToolbar>
+                                <Toolbar>
+                                    <content>
+                                        <ToolbarSpacer></ToolbarSpacer>
+                                        <Button text="{i18n>ODataV4DeleteButton}" type="Reject"
+                                            enabled="{ui>/tabs/odatav4/deleteEnabled}"
+                                            press=".onDeleteRecordV4"></Button>
+                                    </content>
+                                </Toolbar>
+                            </headerToolbar>
                             <columns>
-                                <Column>
+                                <Column width="5%">
                                     <Text text="{i18n>columnOdataV2Id}"></Text>
                                 </Column>
                                 <Column>
                                     <Text text="{i18n>columnOdataV2Name}"></Text>
                                 </Column>
-                                <Column>
+                                <Column width="35%">
                                     <Text text="{i18n>columnOdataV2Description}"></Text>
                                 </Column>
                                 <Column>
@@ -187,10 +197,10 @@
                                 <Column>
                                     <Text text="{i18n>columnOdataV2DiscontinuedDate}"></Text>
                                 </Column>
-                                <Column>
+                                <Column width="5%">
                                     <Text text="{i18n>columnOdataV2Rating}"></Text>
                                 </Column>
-                                <Column>
+                                <Column width="5%">
                                     <Text text="{i18n>columnOdataV2Price}"></Text>
                                 </Column>
                             </columns>

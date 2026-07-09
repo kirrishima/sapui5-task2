@@ -20,32 +20,16 @@ sap.ui.define(
         this.dateRegex = /^\d{4}-\d{2}-\d{2}$/;
         const viewModel = new JSONModel("model/data.json");
 
-        viewModel.attachRequestCompleted(() => {
-          const books = viewModel.getProperty("/Books");
-          const newBooks = books.map((book) => ({ ...book, IsEditing: false }));
+        this._setupViewModel(viewModel);
+        this.getView()?.setModel(viewModel, "view");
 
-          viewModel.setData({ Books: newBooks, IsDeleteButtonEnabled: false });
-          this._viewModel = viewModel;
-
-          const genres = [...new Set(books.map((book) => book.Genre))].map((genre) => ({
-            key: genre,
-            text: genre,
-          }));
-
-          genres.unshift({ key: "All", text: "All" });
-          const filtersModel = new JSONModel({ genres });
-          this.getView().setModel(filtersModel, "filters");
-        }, this);
-
-        const view = this.getView();
-
-        view?.setModel(viewModel, "view");
-
-        this._v2Model = this.getOwnerComponent().getModel("v2Model");
-        this._resourceBundle = this.getOwnerComponent().getModel("i18n").getResourceBundle();
+        const ownerComponent = this.getOwnerComponent();
+        this._v2Model = ownerComponent.getModel("v2Model");
+        this._v4Model = ownerComponent.getModel("v4Model");
+        this._resourceBundle = ownerComponent.getModel("i18n").getResourceBundle();
         this._uiModel = this._setupUIModel();
 
-        this._router = this.getOwnerComponent().getRouter();
+        this._router = ownerComponent.getRouter();
         this._router.getRoute("RouteTab").attachMatched(this._onTabRouteMatched, this);
       },
 
@@ -73,6 +57,25 @@ sap.ui.define(
 
         this.getView().setModel(uiModel, "ui");
         return uiModel;
+      },
+
+      _setupViewModel(viewModel) {
+        viewModel.attachRequestCompleted(() => {
+          const books = viewModel.getProperty("/Books");
+          const newBooks = books.map((book) => ({ ...book, IsEditing: false }));
+
+          viewModel.setData({ Books: newBooks, IsDeleteButtonEnabled: false });
+          this._viewModel = viewModel;
+
+          const genres = [...new Set(books.map((book) => book.Genre))].map((genre) => ({
+            key: genre,
+            text: genre,
+          }));
+
+          genres.unshift({ key: "All", text: "All" });
+          const filtersModel = new JSONModel({ genres });
+          this.getView().setModel(filtersModel, "filters");
+        }, this);
       },
 
       onTabSelect(event) {
@@ -247,6 +250,28 @@ sap.ui.define(
                 table.removeSelections();
                 this._uiModel.setProperty("/tabs/odatav2/deleteEnabled", false);
               } catch {}
+            }
+          },
+        });
+      },
+
+      onDeleteRecordV4() {
+        const table = this.byId("productsV4Table");
+        const contexts = table.getSelectedContexts();
+
+        if (!contexts.length) {
+          return;
+        }
+
+        MessageBox.confirm(this._resourceBundle.getText("dialogConfirmDeletionContent", [contexts.length]), {
+          title: this._resourceBundle.getText("dialogConfirmDeletionTitle"),
+          onClose: async (actionText) => {
+            if (actionText === MessageBox.Action.OK) {
+              try {
+                await this.deleteContextsV4(contexts);
+                table.removeSelections();
+                this._uiModel.setProperty("/tabs/odatav4/deleteEnabled", false);
+              } catch (error) {}
             }
           },
         });
@@ -430,18 +455,16 @@ sap.ui.define(
         this.byId("productsV2Table")?.getBinding("items")?.sort(sorter);
       },
 
-      onAnyTableSelectionChange(event) {
-        const table = event.getSource();
-        const propertyPath = table
-          .getCustomData()
-          .find((data) => data.getKey() === "deleteEnabledPath")
-          ?.getValue();
+      onJsonModelTableSelectionChange(event) {
+        this.updateActionEnablement(event.getSource(), this._uiModel, "/tabs/json/deleteEnabled");
+      },
 
-        if (!propertyPath) {
-          return;
-        }
+      onODataV2SelectionChange(event) {
+        this.updateActionEnablement(event.getSource(), this._uiModel, "/tabs/odatav2/deleteEnabled");
+      },
 
-        this._uiModel.setProperty(propertyPath, !!table.getSelectedItems().length);
+      onODataV4SelectionChange(event) {
+        this.updateActionEnablement(event.getSource(), this._uiModel, "/tabs/odatav4/deleteEnabled");
       },
 
       onFilter(event) {
