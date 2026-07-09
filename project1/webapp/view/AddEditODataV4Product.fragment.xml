@@ -1,0 +1,94 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout">
+    <Dialog id="odataV4ProductDialog" type="Message"
+        binding="{ui>/tabs/odatav4/productForm}"
+        title="{= ${ui>mode} === 'edit'
+            ? ${i18n>odataV4ProductDialogTitleEdit}
+            : ${i18n>odataV4ProductDialogTitleCreate} }">
+        <content>
+            <l:VerticalLayout width="100%">
+                <VBox class="sapUiSmallMarginBottom">
+                    <Label text="{i18n>odataV4ProductDialogLabelId}" labelFor="odatav4IdInput"
+                        required="{ui>fields/ID/required}" />
+                    <Input id="odatav4IdInput" fieldGroupIds="odatav4ProductForm"
+                        required="{ui>fields/ID/required}" name="ID"
+                        valueState="{ui>fields/ID/valueState}"
+                        valueStateText="{i18n>odataV4ProductDialogInputIdError}"
+                        value="{ui>fields/ID/value}" />
+                </VBox>
+                <VBox class="sapUiSmallMarginBottom">
+                    <Label text="{i18n>odataV4ProductDialogLabelName}" labelFor="odatav4NameInput"
+                        required="{ui>fields/Name/required}" />
+                    <Input id="odatav4NameInput" fieldGroupIds="odatav4ProductForm"
+                        required="{ui>fields/Name/required}"
+                        name="Name"
+                        valueState="{ui>fields/Name/valueState}"
+                        valueStateText="{i18n>odataV4ProductDialogInputNameError}"
+                        value="{ui>fields/Name/value}" />
+                </VBox>
+                <VBox class="sapUiSmallMarginBottom">
+                    <Label text="{i18n>odataV4ProductDialogLabelDescription}"
+                        labelFor="odatav4DescriptionInput"
+                        required="{ui>fields/Description/required}" />
+                    <Input id="odatav4DescriptionInput" fieldGroupIds="odatav4ProductForm"
+                        required="{ui>fields/Description/required}"
+                        name="Description"
+                        valueState="{ui>fields/Description/valueState}"
+                        valueStateText="{i18n>odataV4ProductDialogInputDescriptionError}"
+                        value="{ui>fields/Description/value}" />
+                </VBox>
+                <VBox class="sapUiSmallMarginBottom">
+                    <Label text="{i18n>odataV4ProductDialogLabelReleaseDate}"
+                        labelFor="odatav4ReleaseDateInput"
+                        required="{ui>fields/ReleaseDate/required}" />
+                    <DatePicker id="odatav4ReleaseDateInput" fieldGroupIds="odatav4ProductForm"
+                        required="{ui>fields/ReleaseDate/required}" name="ReleaseDate"
+                        valueState="{ui>fields/ReleaseDate/valueState}"
+                        valueStateText="{i18n>odataV4ProductDialogInputReleaseDateError}"
+                        value="{ui>fields/ReleaseDate/value}" />
+                </VBox>
+                <VBox class="sapUiSmallMarginBottom">
+                    <Label text="{i18n>odataV4ProductDialogLabelDiscontinuedDate}"
+                        labelFor="odatav4DiscontinuedDateInput"
+                        required="{ui>fields/DiscontinuedDate/required}" />
+                    <DatePicker id="odatav4DiscontinuedDateInput" fieldGroupIds="odatav4ProductForm"
+                        required="{ui>fields/DiscontinuedDate/required}"
+                        name="DiscontinuedDate"
+                        valueState="{ui>fields/DiscontinuedDate/valueState}"
+                        valueStateText="{i18n>odataV4ProductDialogInputDiscontinuedDateError}"
+                        value="{ui>fields/DiscontinuedDate/value}" />
+                </VBox>
+                <VBox class="sapUiSmallMarginBottom">
+                    <Label text="{i18n>odataV4ProductDialogLabelRating}"
+                        labelFor="odatav4RatingInput"
+                        required="{ui>fields/Rating/required}" />
+                    <Input id="odatav4RatingInput" fieldGroupIds="odatav4ProductForm"
+                        required="{ui>fields/Rating/required}" name="Rating"
+                        valueState="{ui>fields/Rating/valueState}"
+                        valueStateText="{i18n>odataV4ProductDialogInputRatingRangeError}"
+                        value="{ui>fields/Rating/value}" />
+                </VBox>
+                <VBox class="sapUiSmallMarginBottom">
+                    <Label text="{i18n>odataV4ProductDialogLabelPrice}" labelFor="odatav4PriceInput"
+                        required="{ui>fields/Price/required}" />
+                    <Input id="odatav4PriceInput" fieldGroupIds="odatav4ProductForm"
+                        required="{ui>fields/Price/required}"
+                        name="Price"
+                        valueState="{ui>fields/Price/valueState}"
+                        valueStateText="{i18n>odataV4ProductDialogInputPriceRangeError}"
+                        value="{ui>fields/Price/value}" />
+                </VBox>
+            </l:VerticalLayout>
+        </content>
+        <beginButton>
+            <Button type="Emphasized"
+                text="{= ${ui>mode} === 'edit'
+                    ? ${i18n>odataV4ProductDialogButtonSave}
+                    : ${i18n>odataV4ProductDialogButtonCreate} }"
+                press=".onConfirmODataV4Record" />
+        </beginButton>
+        <endButton>
+            <Button text="{i18n>odataV4ProductDialogButtonCancel}"
+                press=".onCancelODataV4RecordDialog" />
+        </endButton>
+    </Dialog>
+</core:FragmentDefinition>

@@ -175,6 +175,7 @@
                                 <Toolbar>
                                     <content>
                                         <ToolbarSpacer></ToolbarSpacer>
+                                        <Button text="{i18n>ODataV4CreateButton}" type="Accept"  press=".onCreateRecordV4"></Button>
                                         <Button text="{i18n>ODataV4DeleteButton}" type="Reject"
                                             enabled="{ui>/tabs/odatav4/deleteEnabled}"
                                             press=".onDeleteRecordV4"></Button>

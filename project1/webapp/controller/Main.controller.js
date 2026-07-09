@@ -2,7 +2,7 @@ sap.ui.define(
   [
     "./BaseController",
     "sap/ui/model/json/JSONModel",
-    "sap/ui/model/odata/v2/ODataModel",
+    "sap/ui/model/odata/type/DateTimeOffset",
     "sap/ui/model/Sorter",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
@@ -10,10 +10,21 @@ sap.ui.define(
     "sap/m/MessageToast",
     "sap/m/MessageBox",
   ],
-  (BaseController, JSONModel, ODataModelv2, Sorter, Filter, FilterOperator, coreLibrary, MessageToast, MessageBox) => {
+  (
+    BaseController,
+    JSONModel,
+    DateTimeOffset,
+    Sorter,
+    Filter,
+    FilterOperator,
+    coreLibrary,
+    MessageToast,
+    MessageBox,
+  ) => {
     "use strict";
 
     const ValueState = coreLibrary.ValueState;
+    const DateTimeOffsetType = new DateTimeOffset({ patter: "dd.MM.yyyy", UTC: true }, { nullable: true, V4: true });
 
     return BaseController.extend("project1.controller.Main", {
       onInit() {
@@ -275,6 +286,109 @@ sap.ui.define(
             }
           },
         });
+      },
+
+      _formatDateForForm(date) {
+        if (!date) return "";
+        const d = date instanceof Date ? date : new Date(date);
+        if (isNaN(d.getTime())) return "";
+        return d.toISOString().split("T")[0];
+      },
+
+      _getEmptyODataV4ProductForm(mode, entity) {
+        const data = entity || {};
+
+        const field = (value, required = false) => ({
+          value: value ?? "",
+          valueState: "None",
+          required,
+        });
+
+        return {
+          mode, // "create" | "edit"
+          bindingPath: null,
+          fields: {
+            ID: field(data.ID, true),
+            Name: field(data.Name, true),
+            Description: field(data.Description, false),
+            ReleaseDate: field(data.ReleaseDate ? new Date(data.ReleaseDate) : null, true),
+            DiscontinuedDate: field(data.DiscontinuedDate ? new Date(data.DiscontinuedDate) : null, false),
+            Rating: field(data.Rating != null ? String(data.Rating) : "", true),
+            Price: field(data.Price != null ? String(data.Price) : "", true),
+          },
+        };
+      },
+
+      async onCreateRecordV4(event) {
+        const productForm = this._getEmptyODataV4ProductForm("create");
+        this._uiModel.setProperty("/tabs/odatav4/productForm", productForm);
+
+        if (!this._addEditODataV4ProductDialog) {
+          this._addEditODataV4ProductDialog = await this.loadFragment({
+            name: "project1.view.AddEditODataV4Product",
+          });
+        }
+
+        this._addEditODataV4ProductDialog.open();
+      },
+
+      _validateAddEditODataV4Product() {
+        const data = this._uiModel.getProperty("/tabs/odatav4/productForm");
+        let valid = true;
+
+        for (const key in data.fields) {
+          const control = data.fields[key];
+          let isValid = true;
+
+          if (control.required && !control.value && key !== "ReleaseDate") {
+            // временный костыль
+            isValid = false;
+          }
+
+          if (key === "Rating" && (Number(control.value) < 0 || Number(control.value) > 5)) {
+            isValid = false;
+          } else if (key === "Price" && Number(control.value) < 0) {
+            isValid = false;
+          }
+
+          // if ((key === "DiscontinuedDate" || key === "ReleaseDate") && control.value) {
+          //   try {
+          //     const internalValue = DateTimeOffsetType.parseValue(control.value, "string");
+          //     DateTimeOffsetType.validateValue(internalValue);
+          //   } catch (e) {
+          //     isValid = false;
+          //   }
+          // }
+
+          if (!isValid) {
+            valid = false;
+          }
+          control.valueState = isValid ? ValueState.None : ValueState.Error;
+        }
+
+        if (!valid) {
+          this._uiModel.setProperty("/tabs/odatav4/productForm", data);
+        }
+        return valid;
+      },
+
+      onCancelODataV4RecordDialog() {
+        this._addEditODataV4ProductDialog.close();
+      },
+
+      onConfirmODataV4Record() {
+        if (!this._validateAddEditODataV4Product()) {
+          return;
+        }
+
+        const bindingList = this._v4Model.bindList("/Products");
+        const data = this._uiModel.getProperty("/tabs/odatav4/productForm");
+        const newContext = bindingList.create(data.fields);
+
+        this._v4Model.submitBatch("myUpdateGroupId").then(
+          () => MessageToast.show(this._resourceBundle.getText("odataV4ProductDialogSuccessMessage")),
+          () => MessageBox.error(this._resourceBundle.getText("odataV4ProductDialogFailedMessage")),
+        );
       },
 
       _setDialogControlsByFieldGroupIdValueState(dialog, fieldGroup, state) {
