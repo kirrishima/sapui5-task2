@@ -23,20 +23,13 @@ sap.ui.define(
         });
       },
 
-      async deleteContextsV4(contexts) {
+       deleteContextsV4(contexts) {
         if (!contexts || contexts.length === 0) {
           return Promise.resolve();
         }
 
-        const deletionPromises = contexts.map((context) => context.delete());
-
-        try {
-          await Promise.all(deletionPromises);
-          MessageToast.show(this._resourceBundle.getText("ODataDeleteSuccess"));
-        } catch (error) {
-          MessageBox.error(this._resourceBundle.getText("ODataDeleteError"));
-          throw error;
-        }
+        contexts.forEach((context) => context.delete());
+        return this._v4Model.submitBatch("updateGroup");
       },
 
       updateActionEnablement(table, model, modelPath) {

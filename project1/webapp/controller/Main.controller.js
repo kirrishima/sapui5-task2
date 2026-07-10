@@ -1,8 +1,8 @@
 sap.ui.define(
   [
     "./BaseController",
+    "project1/model/models",
     "sap/ui/model/json/JSONModel",
-    "sap/ui/model/odata/v2/ODataModel",
     "sap/ui/model/Sorter",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
@@ -10,7 +10,7 @@ sap.ui.define(
     "sap/m/MessageToast",
     "sap/m/MessageBox",
   ],
-  (BaseController, JSONModel, ODataModelv2, Sorter, Filter, FilterOperator, coreLibrary, MessageToast, MessageBox) => {
+  (BaseController, models, JSONModel, Sorter, Filter, FilterOperator, coreLibrary, MessageToast, MessageBox) => {
     "use strict";
 
     const ValueState = coreLibrary.ValueState;
@@ -18,64 +18,19 @@ sap.ui.define(
     return BaseController.extend("project1.controller.Main", {
       onInit() {
         this.dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-        const viewModel = new JSONModel("model/data.json");
 
-        this._setupViewModel(viewModel);
-        this.getView()?.setModel(viewModel, "view");
+        this._viewModel = models.createViewModel.call(this);
+        this.getView()?.setModel(this._viewModel, "view");
 
         const ownerComponent = this.getOwnerComponent();
         this._v2Model = ownerComponent.getModel("v2Model");
         this._v4Model = ownerComponent.getModel("v4Model");
         this._resourceBundle = ownerComponent.getModel("i18n").getResourceBundle();
-        this._uiModel = this._setupUIModel();
+        this._uiModel = models.createUIModel(this._resourceBundle);
+        this.getView().setModel(this._uiModel, "ui");
 
         this._router = ownerComponent.getRouter();
         this._router.getRoute("RouteTab").attachMatched(this._onTabRouteMatched, this);
-      },
-
-      _setupUIModel() {
-        const uiModel = new JSONModel({
-          selectedTab: "jsonmodel",
-          tabs: {
-            json: { deleteEnabled: false },
-            odatav2: {
-              deleteEnabled: false,
-              sortableColumns: [
-                { key: "", text: this._resourceBundle.getText("odatav2SortNoneOption") },
-                { key: "ID", text: this._resourceBundle.getText("columnOdataV2Id") },
-                { key: "Name", text: this._resourceBundle.getText("columnOdataV2Name") },
-                { key: "Description", text: this._resourceBundle.getText("columnOdataV2Description") },
-                { key: "ReleaseDate", text: this._resourceBundle.getText("columnOdataV2ReleaseDate") },
-                { key: "DiscontinuedDate", text: this._resourceBundle.getText("columnOdataV2DiscontinuedDate") },
-                { key: "Rating", text: this._resourceBundle.getText("columnOdataV2Rating") },
-                { key: "Price", text: this._resourceBundle.getText("columnOdataV2Price") },
-              ],
-            },
-            odatav4: { deleteEnabled: false },
-          },
-        });
-
-        this.getView().setModel(uiModel, "ui");
-        return uiModel;
-      },
-
-      _setupViewModel(viewModel) {
-        viewModel.attachRequestCompleted(() => {
-          const books = viewModel.getProperty("/Books");
-          const newBooks = books.map((book) => ({ ...book, IsEditing: false }));
-
-          viewModel.setData({ Books: newBooks, IsDeleteButtonEnabled: false });
-          this._viewModel = viewModel;
-
-          const genres = [...new Set(books.map((book) => book.Genre))].map((genre) => ({
-            key: genre,
-            text: genre,
-          }));
-
-          genres.unshift({ key: "All", text: "All" });
-          const filtersModel = new JSONModel({ genres });
-          this.getView().setModel(filtersModel, "filters");
-        }, this);
       },
 
       onTabSelect(event) {
@@ -271,10 +226,126 @@ sap.ui.define(
                 await this.deleteContextsV4(contexts);
                 table.removeSelections();
                 this._uiModel.setProperty("/tabs/odatav4/deleteEnabled", false);
-              } catch (error) {}
+                MessageToast.show(this._resourceBundle.getText("ODataDeleteSuccess"));
+              } catch (error) {
+                MessageBox.error(this._resourceBundle.getText("ODataDeleteError"));
+              }
             }
           },
         });
+      },
+
+      _formatDateForForm(date) {
+        if (!date) return "";
+        const d = date instanceof Date ? date : new Date(date);
+        if (isNaN(d.getTime())) return "";
+        return d.toISOString().split("T")[0];
+      },
+
+      _getEmptyODataV4ProductForm(mode, entity) {
+        const data = entity || {};
+
+        const field = (value, required = false) => ({
+          value: value ?? "",
+          valueState: "None",
+          required,
+          dateValue: null,
+        });
+
+        const dateField = (rawValue, required = false) => ({
+          value: "",
+          valueState: "None",
+          required,
+          dateValue: rawValue ? new Date(rawValue) : null,
+        });
+
+        return {
+          mode, // "create" | "edit"
+          bindingPath: null,
+          fields: {
+            ID: field(data.ID, true),
+            Name: field(data.Name, true),
+            Description: field(data.Description),
+            ReleaseDate: dateField(data.ReleaseDate, true),
+            DiscontinuedDate: dateField(data.DiscontinuedDate),
+            Rating: field(data.Rating != null ? String(data.Rating) : "", true),
+            Price: field(data.Price != null ? String(data.Price) : "", true),
+          },
+        };
+      },
+
+      async onCreateRecordV4(event) {
+        const productForm = this._getEmptyODataV4ProductForm("create");
+        this._uiModel.setProperty("/tabs/odatav4/productForm", productForm);
+
+        if (!this._addEditODataV4ProductDialog) {
+          this._addEditODataV4ProductDialog = await this.loadFragment({
+            name: "project1.view.AddEditODataV4Product",
+          });
+        }
+
+        this._addEditODataV4ProductDialog.open();
+      },
+
+      _validateAddEditODataV4Product() {
+        const data = this._uiModel.getProperty("/tabs/odatav4/productForm");
+        let valid = true;
+
+        for (const key in data.fields) {
+          const control = data.fields[key];
+          const value = control.value;
+          const num = Number(value);
+
+          let isValid = !(control.required && !value && !control.dateValue);
+
+          if (key === "Rating") {
+            isValid = isValid && !isNaN(num) && num >= 0 && num <= 5;
+          } else if (key === "Price") {
+            isValid = isValid && !isNaN(num) && num >= 0;
+          } else if ((key === "DiscontinuedDate" || key === "ReleaseDate") && value) {
+            isValid = isValid && !!control.dateValue;
+          }
+
+          control.valueState = isValid ? ValueState.None : ValueState.Error;
+          valid = valid && isValid;
+        }
+
+        if (!valid) {
+          this._uiModel.setProperty("/tabs/odatav4/productForm", data);
+        }
+
+        return valid;
+      },
+
+      onCancelODataV4RecordDialog() {
+        this._addEditODataV4ProductDialog.close();
+      },
+
+      onConfirmODataV4Record() {
+        if (!this._validateAddEditODataV4Product()) {
+          return;
+        }
+
+        const bindingList = this.byId("productsV4Table").getBinding("items");
+        const data = this._uiModel.getProperty("/tabs/odatav4/productForm");
+        const newContext = bindingList.create({
+          ID: parseInt(data.fields.ID.value, 10),
+          Name: data.fields.Name.value,
+          Description: data.fields.Description.value,
+          ReleaseDate: data.fields.ReleaseDate.dateValue,
+          DiscontinuedDate: data.fields.DiscontinuedDate.dateValue,
+          Rating: parseInt(data.fields.Rating.value, 10),
+          Price: parseFloat(data.fields.Price.value),
+        });
+
+        this._v4Model.submitBatch("updateGroup").then(
+          () => {
+            MessageToast.show(this._resourceBundle.getText("odataV4ProductDialogSuccessMessage"));
+            bindingList.refresh();
+            this._addEditODataV4ProductDialog.close();
+          },
+          () => MessageBox.error(this._resourceBundle.getText("odataV4ProductDialogFailedMessage")),
+        );
       },
 
       _setDialogControlsByFieldGroupIdValueState(dialog, fieldGroup, state) {
