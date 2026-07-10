@@ -318,6 +318,8 @@ sap.ui.define(
       },
 
       onCancelODataV4RecordDialog() {
+        this._editingV4Context = null;
+        this._uiModel.setProperty("/tabs/odatav4/productForm", null);
         this._addEditODataV4ProductDialog.close();
       },
 
