@@ -328,15 +328,29 @@ sap.ui.define(
 
         const bindingList = this.byId("productsV4Table").getBinding("items");
         const data = this._uiModel.getProperty("/tabs/odatav4/productForm");
-        const newContext = bindingList.create({
-          ID: parseInt(data.fields.ID.value, 10),
-          Name: data.fields.Name.value,
-          Description: data.fields.Description.value,
-          ReleaseDate: data.fields.ReleaseDate.dateValue,
-          DiscontinuedDate: data.fields.DiscontinuedDate.dateValue,
-          Rating: parseInt(data.fields.Rating.value, 10),
-          Price: parseFloat(data.fields.Price.value),
-        });
+
+        if (data.mode === "create") {
+          const newContext = bindingList.create({
+            ID: parseInt(data.fields.ID.value, 10),
+            Name: data.fields.Name.value,
+            Description: data.fields.Description.value,
+            ReleaseDate: data.fields.ReleaseDate.dateValue,
+            DiscontinuedDate: data.fields.DiscontinuedDate.dateValue,
+            Rating: parseInt(data.fields.Rating.value, 10),
+            Price: parseFloat(data.fields.Price.value),
+          });
+        }
+
+        if (data.mode === "edit") {
+          const context = this._editingV4Context;
+
+          context.setProperty("Name", data.fields.Name.value);
+          context.setProperty("Description", data.fields.Description.value);
+          context.setProperty("ReleaseDate", this._formatDateForForm(data.fields.ReleaseDate.dateValue));
+          context.setProperty("DiscontinuedDate", this._formatDateForForm(data.fields.DiscontinuedDate.dateValue));
+          context.setProperty("Rating", parseInt(data.fields.Rating.value, 10));
+          context.setProperty("Price", parseFloat(data.fields.Price.value));
+        }
 
         this._v4Model.submitBatch("updateGroup").then(
           () => {
@@ -346,6 +360,22 @@ sap.ui.define(
           },
           () => MessageBox.error(this._resourceBundle.getText("odataV4ProductDialogFailedMessage")),
         );
+      },
+
+      async onEditProductODataV4(event) {
+        const context = event.getSource().getBindingContext("v4Model");
+        const productForm = this._getEmptyODataV4ProductForm("edit", context.getObject());
+
+        this._editingV4Context = context;
+        this._uiModel.setProperty("/tabs/odatav4/productForm", productForm);
+
+        if (!this._addEditODataV4ProductDialog) {
+          this._addEditODataV4ProductDialog = await this.loadFragment({
+            name: "project1.view.AddEditODataV4Product",
+          });
+        }
+
+        this._addEditODataV4ProductDialog.open();
       },
 
       _setDialogControlsByFieldGroupIdValueState(dialog, fieldGroup, state) {
