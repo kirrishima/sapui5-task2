@@ -44,7 +44,8 @@
                         required="{ui>fields/ReleaseDate/required}" name="ReleaseDate"
                         valueState="{ui>fields/ReleaseDate/valueState}"
                         valueStateText="{i18n>odataV4ProductDialogInputReleaseDateError}"
-                        value="{ui>fields/ReleaseDate/value}" />
+                        value="{ui>fields/ReleaseDate/value}"
+                        dateValue="{ui>fields/ReleaseDate/dateValue}" />
                 </VBox>
                 <VBox class="sapUiSmallMarginBottom">
                     <Label text="{i18n>odataV4ProductDialogLabelDiscontinuedDate}"
@@ -55,7 +56,8 @@
                         name="DiscontinuedDate"
                         valueState="{ui>fields/DiscontinuedDate/valueState}"
                         valueStateText="{i18n>odataV4ProductDialogInputDiscontinuedDateError}"
-                        value="{ui>fields/DiscontinuedDate/value}" />
+                        value="{ui>fields/DiscontinuedDate/value}"
+                        dateValue="{ui>fields/DiscontinuedDate/dateValue}" />
                 </VBox>
                 <VBox class="sapUiSmallMarginBottom">
                     <Label text="{i18n>odataV4ProductDialogLabelRating}"

@@ -302,6 +302,14 @@ sap.ui.define(
           value: value ?? "",
           valueState: "None",
           required,
+          dateValue: null,
+        });
+
+        const dateField = (rawValue, required = false) => ({
+          value: "",
+          valueState: "None",
+          required,
+          dateValue: rawValue ? new Date(rawValue) : null,
         });
 
         return {
@@ -310,9 +318,9 @@ sap.ui.define(
           fields: {
             ID: field(data.ID, true),
             Name: field(data.Name, true),
-            Description: field(data.Description, false),
-            ReleaseDate: field(data.ReleaseDate ? new Date(data.ReleaseDate) : null, true),
-            DiscontinuedDate: field(data.DiscontinuedDate ? new Date(data.DiscontinuedDate) : null, false),
+            Description: field(data.Description),
+            ReleaseDate: dateField(data.ReleaseDate, true),
+            DiscontinuedDate: dateField(data.DiscontinuedDate),
             Rating: field(data.Rating != null ? String(data.Rating) : "", true),
             Price: field(data.Price != null ? String(data.Price) : "", true),
           },
@@ -338,37 +346,27 @@ sap.ui.define(
 
         for (const key in data.fields) {
           const control = data.fields[key];
-          let isValid = true;
+          const value = control.value;
+          const num = Number(value);
 
-          if (control.required && !control.value && key !== "ReleaseDate") {
-            // временный костыль
-            isValid = false;
+          let isValid = !(control.required && !value && !control.dateValue);
+
+          if (key === "Rating") {
+            isValid = isValid && !isNaN(num) && num >= 0 && num <= 5;
+          } else if (key === "Price") {
+            isValid = isValid && !isNaN(num) && num >= 0;
+          } else if ((key === "DiscontinuedDate" || key === "ReleaseDate") && value) {
+            isValid = isValid && !!control.dateValue;
           }
 
-          if (key === "Rating" && (Number(control.value) < 0 || Number(control.value) > 5)) {
-            isValid = false;
-          } else if (key === "Price" && Number(control.value) < 0) {
-            isValid = false;
-          }
-
-          // if ((key === "DiscontinuedDate" || key === "ReleaseDate") && control.value) {
-          //   try {
-          //     const internalValue = DateTimeOffsetType.parseValue(control.value, "string");
-          //     DateTimeOffsetType.validateValue(internalValue);
-          //   } catch (e) {
-          //     isValid = false;
-          //   }
-          // }
-
-          if (!isValid) {
-            valid = false;
-          }
           control.valueState = isValid ? ValueState.None : ValueState.Error;
+          valid = valid && isValid;
         }
 
         if (!valid) {
           this._uiModel.setProperty("/tabs/odatav4/productForm", data);
         }
+
         return valid;
       },
 
@@ -381,12 +379,24 @@ sap.ui.define(
           return;
         }
 
-        const bindingList = this._v4Model.bindList("/Products");
+        const bindingList = this.byId("productsV4Table").getBinding("items");
         const data = this._uiModel.getProperty("/tabs/odatav4/productForm");
-        const newContext = bindingList.create(data.fields);
+        const newContext = bindingList.create({
+          ID: parseInt(data.fields.ID.value, 10),
+          Name: data.fields.Name.value,
+          Description: data.fields.Description.value,
+          ReleaseDate: data.fields.ReleaseDate.dateValue,
+          DiscontinuedDate: data.fields.DiscontinuedDate.dateValue,
+          Rating: parseInt(data.fields.Rating.value, 10),
+          Price: parseFloat(data.fields.Price.value),
+        });
 
         this._v4Model.submitBatch("myUpdateGroupId").then(
-          () => MessageToast.show(this._resourceBundle.getText("odataV4ProductDialogSuccessMessage")),
+          () => {
+            MessageToast.show(this._resourceBundle.getText("odataV4ProductDialogSuccessMessage"));
+            bindingList.refresh();
+            this._addEditODataV4ProductDialog.close();
+          },
           () => MessageBox.error(this._resourceBundle.getText("odataV4ProductDialogFailedMessage")),
         );
       },
