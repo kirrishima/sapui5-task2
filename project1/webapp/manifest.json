@@ -87,7 +87,10 @@
       },
       "v4Model": {
         "dataSource": "ODataV4Source",
-        "preload": true
+        "preload": true,
+        "settings": {
+          "updateGroupId": "updateGroup"
+        }
       }
     },
     "resources": {

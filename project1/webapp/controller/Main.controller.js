@@ -1,8 +1,8 @@
 sap.ui.define(
   [
     "./BaseController",
+    "project1/model/models",
     "sap/ui/model/json/JSONModel",
-    "sap/ui/model/odata/type/DateTimeOffset",
     "sap/ui/model/Sorter",
     "sap/ui/model/Filter",
     "sap/ui/model/FilterOperator",
@@ -10,83 +10,27 @@ sap.ui.define(
     "sap/m/MessageToast",
     "sap/m/MessageBox",
   ],
-  (
-    BaseController,
-    JSONModel,
-    DateTimeOffset,
-    Sorter,
-    Filter,
-    FilterOperator,
-    coreLibrary,
-    MessageToast,
-    MessageBox,
-  ) => {
+  (BaseController, models, JSONModel, Sorter, Filter, FilterOperator, coreLibrary, MessageToast, MessageBox) => {
     "use strict";
 
     const ValueState = coreLibrary.ValueState;
-    const DateTimeOffsetType = new DateTimeOffset({ patter: "dd.MM.yyyy", UTC: true }, { nullable: true, V4: true });
 
     return BaseController.extend("project1.controller.Main", {
       onInit() {
         this.dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-        const viewModel = new JSONModel("model/data.json");
 
-        this._setupViewModel(viewModel);
-        this.getView()?.setModel(viewModel, "view");
+        this._viewModel = models.createViewModel.call(this);
+        this.getView()?.setModel(this._viewModel, "view");
 
         const ownerComponent = this.getOwnerComponent();
         this._v2Model = ownerComponent.getModel("v2Model");
         this._v4Model = ownerComponent.getModel("v4Model");
         this._resourceBundle = ownerComponent.getModel("i18n").getResourceBundle();
-        this._uiModel = this._setupUIModel();
+        this._uiModel = models.createUIModel(this._resourceBundle);
+        this.getView().setModel(this._uiModel, "ui");
 
         this._router = ownerComponent.getRouter();
         this._router.getRoute("RouteTab").attachMatched(this._onTabRouteMatched, this);
-      },
-
-      _setupUIModel() {
-        const uiModel = new JSONModel({
-          selectedTab: "jsonmodel",
-          tabs: {
-            json: { deleteEnabled: false },
-            odatav2: {
-              deleteEnabled: false,
-              sortableColumns: [
-                { key: "", text: this._resourceBundle.getText("odatav2SortNoneOption") },
-                { key: "ID", text: this._resourceBundle.getText("columnOdataV2Id") },
-                { key: "Name", text: this._resourceBundle.getText("columnOdataV2Name") },
-                { key: "Description", text: this._resourceBundle.getText("columnOdataV2Description") },
-                { key: "ReleaseDate", text: this._resourceBundle.getText("columnOdataV2ReleaseDate") },
-                { key: "DiscontinuedDate", text: this._resourceBundle.getText("columnOdataV2DiscontinuedDate") },
-                { key: "Rating", text: this._resourceBundle.getText("columnOdataV2Rating") },
-                { key: "Price", text: this._resourceBundle.getText("columnOdataV2Price") },
-              ],
-            },
-            odatav4: { deleteEnabled: false },
-          },
-        });
-
-        this.getView().setModel(uiModel, "ui");
-        return uiModel;
-      },
-
-      _setupViewModel(viewModel) {
-        viewModel.attachRequestCompleted(() => {
-          const books = viewModel.getProperty("/Books");
-          const newBooks = books.map((book) => ({ ...book, IsEditing: false }));
-
-          viewModel.setData({ Books: newBooks, IsDeleteButtonEnabled: false });
-          this._viewModel = viewModel;
-
-          const genres = [...new Set(books.map((book) => book.Genre))].map((genre) => ({
-            key: genre,
-            text: genre,
-          }));
-
-          genres.unshift({ key: "All", text: "All" });
-          const filtersModel = new JSONModel({ genres });
-          this.getView().setModel(filtersModel, "filters");
-        }, this);
       },
 
       onTabSelect(event) {
@@ -282,7 +226,10 @@ sap.ui.define(
                 await this.deleteContextsV4(contexts);
                 table.removeSelections();
                 this._uiModel.setProperty("/tabs/odatav4/deleteEnabled", false);
-              } catch (error) {}
+                MessageToast.show(this._resourceBundle.getText("ODataDeleteSuccess"));
+              } catch (error) {
+                MessageBox.error(this._resourceBundle.getText("ODataDeleteError"));
+              }
             }
           },
         });
@@ -391,7 +338,7 @@ sap.ui.define(
           Price: parseFloat(data.fields.Price.value),
         });
 
-        this._v4Model.submitBatch("myUpdateGroupId").then(
+        this._v4Model.submitBatch("updateGroup").then(
           () => {
             MessageToast.show(this._resourceBundle.getText("odataV4ProductDialogSuccessMessage"));
             bindingList.refresh();
